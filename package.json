@@ -1,0 +1,28 @@
+{
+  "name": "tufte",
+  "version": "0.0.1",
+  "description": "Tufte style plots for the browser",
+  "main": "./dist/tufte.js",
+  "repository": "git@github.com:lepisma/tufte.js",
+  "author": "Abhinav Tushar <abhinav.tushar.vs@gmail.com>",
+  "license": "GPL-3.0",
+  "scripts": {
+    "compile": "webpack",
+    "build": "PROD_ENV=1 webpack",
+    "prepublish": "npm run compile",
+    "test": "standard",
+    "watch": "webpack --watch"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-latest": "^6.24.1",
+    "sass-loader": "^6.0.5",
+    "standard": "^10.0.2",
+    "style-loader": "^0.17.0",
+    "webpack": "^2.5.1"
+  },
+  "dependencies": {
+    "d3": "^4.9.1"
+  }
+}
