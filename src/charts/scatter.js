@@ -19,22 +19,25 @@ export default class ScatterPlot {
         .attr('height', cfg.height)
 
     // Setup layout
+
+    let marginalBand = cfg.marginal ? 50 : 0
+
     let drawingBound = {
-      height: uheight - cfg.axisBands.x - cfg.axisMargin,
-      width: uwidth - cfg.axisBands.y - cfg.axisMargin,
-      x: cfg.margins.left + cfg.axisBands.y + cfg.axisMargin,
+      height: uheight - cfg.axisBands.x - cfg.axisMargin - marginalBand,
+      width: uwidth - cfg.axisBands.y - cfg.axisMargin - marginalBand,
+      x: cfg.margins.left + cfg.axisBands.y + cfg.axisMargin + marginalBand,
       y: cfg.margins.top
     }
 
     let xAxisBounds = {
       height: cfg.axisBands.x,
-      width: uwidth - cfg.axisBands.y - cfg.axisMargin,
-      x: cfg.margins.left + cfg.axisBands.y + cfg.axisMargin,
+      width: uwidth - cfg.axisBands.y - cfg.axisMargin - marginalBand,
+      x: cfg.margins.left + cfg.axisBands.y + cfg.axisMargin + marginalBand,
       y: cfg.margins.top + uheight - cfg.axisBands.x
     }
 
     let yAxisBounds = {
-      height: uheight - cfg.axisBands.x - cfg.axisMargin,
+      height: uheight - cfg.axisBands.x - cfg.axisMargin - marginalBand,
       width: cfg.axisBands.y,
       x: cfg.margins.left + cfg.axisBands.y,
       y: cfg.margins.top

@@ -11,9 +11,9 @@ export function parseConfig (target, data, config) {
   let selectionHeight = (selectionBB.height === 0 ? 400 : selectionBB.height)
   let selectionWidth = selectionBB.width
 
-  try {
+  if (config && config.width) {
     selectionWidth = config.width
-  } catch (e) {}
+  }
 
   // Heuristic to check whether we can make the plot cleaner
   let clean = selectionWidth / data.length > 15
