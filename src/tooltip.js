@@ -1,18 +1,20 @@
 import * as d3 from 'd3'
 
 export default class Tooltip {
-  constructor (target, cfg) {
+  constructor (target) {
     this.div = d3.select(target).append('div')
       .attr('class', 'tufte-tooltip')
       .style('display', 'none')
-
-    this.offset = {
-      right: { x: 15, y: 15 },
-      left: { x: -150 - 15, y: 15 }
-    }
+    this.offset = 15
+    this.div.text('undefined')
   }
 
-  show () {
+  get width () {
+    return Math.max(this.selection.node().getBoundingClientRect().width, 50)
+  }
+
+  show (data) {
+    this.div.text(data)
     this.div.style('display', null)
   }
 
@@ -20,13 +22,9 @@ export default class Tooltip {
     this.div.style('display', 'none')
   }
 
-  move (position, direction = 'right') {
+  move (x, y) {
     this.div
-      .style('top', (position.y + this.offset[direction].y) + 'px')
-      .style('left', (position.x + this.offset[direction].x) + 'px')
-  }
-
-  render (data) {
-    this.div.html(data)
+      .style('top', (y + this.offset) + 'px')
+      .style('left', (x + this.offset) + 'px')
   }
 }

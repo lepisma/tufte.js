@@ -1,10 +1,21 @@
 // Colors
 $black: #000;
 $white: #fff;
+$gray: #333;
+$light: #aaa;
 
 .axis {
   .domain,
   .tick line {
     display: none;
   }
+}
+
+.tufte-tooltip {
+  background: $white;
+  box-shadow: 1px 1px 3px 1px $light;
+  font-family: serif;
+  font-size: 11px;
+  padding: 4px 7px;
+  position: fixed;
 }
