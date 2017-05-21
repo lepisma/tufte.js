@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Examples | tufte.js</title>
+  </head>
+  <body>
+    <div id="line-plot" style="width: 50%"></div>
+
+    <div id="line-plot-more-points" style="width: 50%"></div>
+
+    <div id="scatter-plot" style="width: 50%"></div>
+
+    <div id="scatter-plot-with-marginal" style="width: 50%"></div>
+
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+    <script type="text/javascript" src="./dist/tufte.js"></script>
+    <script type="text/javascript">
+     // Plain ol' chart with lesser number of points
+     new tufte.LinePlot('#line-plot', [...Array(40).keys()].map(d => {
+       return {x: d, y: Math.random()}
+     }))
+
+     // Same line plot but with much more points
+     new tufte.LinePlot('#line-plot-more-points', [...Array(200).keys()].map(d => {
+       return {x: d, y: Math.random()}
+     }))
+
+     // Plain scatter plot
+     new tufte.ScatterPlot('#scatter-plot', [...Array(200).keys()].map(d => {
+       return {x: d, y: Math.random()}
+     }))
+
+     // Scatter plot with marginals
+     new tufte.ScatterPlot('#scatter-plot', [...Array(200).keys()].map(d => {
+       return {x: d, y: Math.random()}
+     }), {
+       marginals: true
+     })
+    </script>
+  </body>
+</html>
