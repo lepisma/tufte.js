@@ -1,6 +1,6 @@
 {
   "name": "tufte",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Tufte style plots for the browser",
   "main": "./dist/tufte.js",
   "repository": "git@github.com:lepisma/tufte.js",
