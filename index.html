@@ -2,15 +2,90 @@
 <html>
   <head>
     <title>Examples | tufte.js</title>
+    <link rel="stylesheet" href="tufte.css"/>
   </head>
   <body>
-    <div id="line-plot" style="width: 50%"></div>
+    <article>
+      <h1>tufte.js</h1>
+      <p class="subtitle">Tufte style minimal plots for the browser.</p>
 
-    <div id="line-plot-more-points" style="width: 50%"></div>
+      <p>
+        Tufte style plots for the browser. Inspired by <a href="http://motioninsocial.com/tufte/">Tufte
+        in R</a>. The plots here are not exhaustive and more plots will be added
+        as I feel need for them.
+      </p>
 
-    <div id="scatter-plot" style="width: 50%"></div>
+      <p>
+        The key idea is to create an ultra minimal library for simple clutter-free
+        visualizations. At places, I have relied on the possibility of
+        interactiveness to deviate from the <em>usual</em> Tufte style which helps in
+        removing more <em>ink</em>. In case some of the <em>required</em> data
+        ink is missing, its because either they are in plan or I have actually
+        missed them (because of my narrow use case) or they are better suited to
+        a visualization apt for <em>small data</em>, like a table.
+      </p>
 
-    <div id="scatter-plot-with-marginal" style="width: 50%"></div>
+      <p>
+        <em>
+          tufte.js is under development and there are many
+          <a href="https://github.com/lepisma/tufte.js/issues">issues</a> to
+          be solved before it is really ready for use. This project is not
+          associated with Edward Tufte and is purely an opinionated take on his
+          visual style.
+        </em>
+      </p>
+
+      <section>
+        <h2>Getting started</h2>
+
+        <p>
+          <code>tufte.js</code> is a <a href="https://d3js.org/">D3</a> based
+          library. To use it, download the source and include the following
+          snippet in your html document.
+        </p>
+
+        <pre class="code">&lt;script src="https://d3js.org/d3.v4.min.js">&lt;/script>
+&lt;script type="text/javascript" src="./dist/tufte.js">&lt;script></pre>
+
+        <p>TODO:<em>documentation</em></p>
+      </section>
+
+      <section>
+        <h2>Line plot</h2>
+        <br>
+        <br>
+        <br>
+        <figure>
+          <span class="marginnote">A simple line plot with on hover tooltips for points</span>
+          <div id="line-plot"></div>
+        </figure>
+        <br>
+        <br>
+        <br>
+        <figure>
+          <span class="marginnote">Line plot with lots of points is clearer without circles</span>
+          <div id="line-plot-more-points"></div>
+        </figure>
+      </section>
+
+      <section>
+        <h2>Scatter plot</h2>
+        <br>
+        <br>
+        <br>
+        <figure>
+          <span class="marginnote">Basic scatter plot with hover tooltips</span>
+          <div id="scatter-plot"></div>
+        </figure>
+        <br>
+        <br>
+        <br>
+        <figure>
+          <span class="marginnote">Marginal values are shown along side the axes for scatter plot</span>
+          <div id="scatter-plot-with-marginal"></div>
+        </figure>
+      </section>
+    </article>
 
     <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript" src="./dist/tufte.js"></script>
@@ -29,7 +104,7 @@
 
      // Plain ol' chart with lesser number of points
      new tufte.LinePlot('#line-plot', [...Array(10).keys()].map(d => {
-       return {x: d + 2000, y: pgen.next().value}
+       return {x: d, y: pgen.next().value}
      }))
 
      // Same line plot but with much more points
