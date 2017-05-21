@@ -10,7 +10,7 @@ export class XAxisPatch {
         .domain(d3.extent(data, d => d.x))
         .range([bounds.x, bounds.width + bounds.x])
 
-    let xAxis = d3.axisBottom(xScale)
+    let xAxis = d3.axisBottom(xScale).ticks(5)
     xAxisDiv.transition().duration(200).call(xAxis)
   }
 }
@@ -25,7 +25,7 @@ export class YAxisPatch {
         .domain(d3.extent(data, d => d.y))
         .range([bounds.y + bounds.height, bounds.y])
 
-    let yAxis = d3.axisLeft(yScale)
+    let yAxis = d3.axisLeft(yScale).ticks(5)
     yAxisDiv.transition().duration(200).call(yAxis)
   }
 }
