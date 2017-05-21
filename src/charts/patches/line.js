@@ -18,7 +18,7 @@ export default class LinePatch {
       line = line.curve(d3.curveBasis)
     }
 
-    svg.append('path')
+    svg.append('g').append('path')
       .attr('class', 'line')
       .datum(data)
       .transition()

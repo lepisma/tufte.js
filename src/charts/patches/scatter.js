@@ -10,7 +10,9 @@ export default class ScatterPatch {
         .domain(d3.extent(data, d => d.y))
         .range([bounds.height, 0])
 
-    let circles = svg.selectAll('.point')
+    let patchGroup = svg.append('g')
+
+    let circles = patchGroup.selectAll('.point')
         .data(data)
 
     circles.enter().append('circle')
@@ -26,7 +28,7 @@ export default class ScatterPatch {
 
     // Add tooltip to circles
     if (config && config.tooltip) {
-      svg.selectAll('circle')
+      patchGroup.selectAll('circle')
         .on('mouseover', function () {
           let elem = d3.select(this)
           config.tooltip.show(`${parseFloat(elem.attr('data-x')).toFixed(2)}, ${parseFloat(elem.attr('data-y')).toFixed(2)}`)

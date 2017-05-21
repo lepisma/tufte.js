@@ -35,3 +35,29 @@ export function parseConfig (target, data, config) {
     axisMargin: 20
   }, config)
 }
+
+/**
+ * Return marginalized histogram data across x and y
+ */
+export function marginalize (data) {
+  let x = data.map(d => d.x)
+  let y = data.map(d => d.y)
+
+  let countsX = d3.histogram().thresholds(d3.thresholdSturges(x))(x).map(bin => bin.length)
+  let countsY = d3.histogram().thresholds(d3.thresholdSturges(y))(y).map(bin => bin.length)
+
+  return [
+    countsX.map((c, idx) => {
+      return {
+        x: idx,
+        y: c
+      }
+    }),
+    countsY.map((c, idx) => {
+      return {
+        x: c,
+        y: idx
+      }
+    })
+  ]
+}

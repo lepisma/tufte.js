@@ -1,10 +1,11 @@
 import * as d3 from 'd3'
 import * as utils from './utils'
 import ScatterPatch from './patches/scatter'
+import LinePatch from './patches/line'
 import { XAxisPatch, YAxisPatch } from './patches/axis'
 import Tooltip from '../tooltip'
 
-export default class ScatterPlot {
+export default class LinePlot {
   constructor (target, data, config) {
     let cfg = utils.parseConfig(target, data, config)
 
@@ -41,6 +42,26 @@ export default class ScatterPlot {
       width: cfg.axisBands.y,
       x: cfg.margins.left + cfg.axisBands.y,
       y: cfg.margins.top
+    }
+
+    if (marginalBand > 0) {
+      let xMarginalBounds = {
+        height: marginalBand,
+        width: drawingBound.width,
+        x: drawingBound.x,
+        y: cfg.margins.top + drawingBound.height + cfg.axisMargin
+      }
+
+      let yMarginalBounds = {
+        height: drawingBound.height,
+        width: marginalBand,
+        x: cfg.margins.left + cfg.axisBands.y,
+        y: cfg.margins.top
+      }
+
+      let [xMarginalizedData, yMarginalizedData] = utils.marginalize(data)
+      new LinePatch(svg, xMarginalBounds, xMarginalizedData, { smooth: true }) // eslint-disable-line no-new
+      new LinePatch(svg, yMarginalBounds, yMarginalizedData, { smooth: true }) // eslint-disable-line no-new
     }
 
     // Plot axes
