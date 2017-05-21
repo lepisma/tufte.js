@@ -1,3 +1,10 @@
 @import 'commons';
 
-@import 'line-plot';
+
+.tufte-line-plot {
+  @import 'line-plot';
+}
+
+.tufte-scatter-plot {
+  @import 'scatter-plot';
+}

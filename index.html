@@ -25,15 +25,21 @@
      }
 
      let pgen = perlinGen()
+     let pgen2 = perlinGen()
 
      // Plain ol' chart with lesser number of points
-     new tufte.LinePlot('#line-plot', [...Array(30).keys()].map(d => {
-       return {x: d, y: pgen.next().value}
+     new tufte.LinePlot('#line-plot', [...Array(10).keys()].map(d => {
+       return {x: d + 2000, y: pgen.next().value}
      }))
 
      // Same line plot but with much more points
      new tufte.LinePlot('#line-plot-more-points', [...Array(200).keys()].map(d => {
        return {x: d, y: pgen.next().value}
+     }))
+
+     // Simple scatter plot
+     new tufte.ScatterPlot('#scatter-plot', [...Array(200).keys()].map(d => {
+       return {x: pgen.next().value, y: pgen2.next().value}
      }))
     </script>
   </body>

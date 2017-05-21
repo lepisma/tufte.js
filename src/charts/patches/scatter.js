@@ -24,16 +24,19 @@ export default class ScatterPatch {
       .attr('data-x', d => d.x)
       .attr('data-y', d => d.y)
 
-    svg.selectAll('circle')
-      .on('mouseover', function () {
-        let elem = d3.select(this)
-        config.tooltip.show(`${parseFloat(elem.attr('data-x')).toFixed(2)}, ${parseFloat(elem.attr('data-y')).toFixed(2)}`)
-      })
-      .on('mouseout', () => config.tooltip.hide())
-      .on('mousemove', () => {
-        let [x, y] = d3.mouse(svg.node())
-        let bb = svg.node().getBoundingClientRect()
-        config.tooltip.move(x + bb.left, y + bb.top)
-      })
+    // Add tooltip to circles
+    if (config && config.tooltip) {
+      svg.selectAll('circle')
+        .on('mouseover', function () {
+          let elem = d3.select(this)
+          config.tooltip.show(`${parseFloat(elem.attr('data-x')).toFixed(2)}, ${parseFloat(elem.attr('data-y')).toFixed(2)}`)
+        })
+        .on('mouseout', () => config.tooltip.hide())
+        .on('mousemove', () => {
+          let [x, y] = d3.mouse(svg.node())
+          let bb = svg.node().getBoundingClientRect()
+          config.tooltip.move(x + bb.left, y + bb.top)
+        })
+    }
   }
 }
