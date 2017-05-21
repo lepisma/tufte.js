@@ -15,27 +15,26 @@
     <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript" src="./dist/tufte.js"></script>
     <script type="text/javascript">
+
+     function* perlinGen() {
+       let state = Math.random()
+       while(true) {
+         state += 2 * (Math.random() - 0.5)
+         yield state
+       }
+     }
+
+     let pgen = perlinGen()
+
      // Plain ol' chart with lesser number of points
-     new tufte.LinePlot('#line-plot', [...Array(40).keys()].map(d => {
-       return {x: d, y: Math.random()}
+     new tufte.LinePlot('#line-plot', [...Array(30).keys()].map(d => {
+       return {x: d, y: pgen.next().value}
      }))
 
      // Same line plot but with much more points
      new tufte.LinePlot('#line-plot-more-points', [...Array(200).keys()].map(d => {
-       return {x: d, y: Math.random()}
+       return {x: d, y: pgen.next().value}
      }))
-
-     // Plain scatter plot
-     new tufte.ScatterPlot('#scatter-plot', [...Array(200).keys()].map(d => {
-       return {x: d, y: Math.random()}
-     }))
-
-     // Scatter plot with marginals
-     new tufte.ScatterPlot('#scatter-plot', [...Array(200).keys()].map(d => {
-       return {x: d, y: Math.random()}
-     }), {
-       marginals: true
-     })
     </script>
   </body>
 </html>
