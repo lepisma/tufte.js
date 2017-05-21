@@ -25,7 +25,7 @@ export function parseConfig (target, data, config) {
       top: 10,
       bottom: 10,
       left: 10,
-      right: 10
+      right: 20
     },
     clean: clean,
     axisBands: {
