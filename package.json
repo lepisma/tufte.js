@@ -14,7 +14,6 @@
     "watch": "webpack --watch"
   },
   "standard": {
-    "parser": "babel-eslint",
     "ignore": [
       "/dist/*.js"
     ]
