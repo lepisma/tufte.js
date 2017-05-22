@@ -22,4 +22,4 @@ better suited to a visualization apt for *small data*, like a table.
 > is really ready for use. This project is not associated with Edward Tufte and
 > is purely an opinionated take on his visual style.
 
-Check out the [documentation](https://lepisma.github.io/tufte.js).
+Check out the [documentation](https://lepisma.github.io/tufte.js/).
