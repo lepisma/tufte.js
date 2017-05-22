@@ -13,6 +13,12 @@
     "test": "standard",
     "watch": "webpack --watch"
   },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "/dist/*.js"
+    ]
+  },
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
