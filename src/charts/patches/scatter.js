@@ -1,14 +1,24 @@
 import * as d3 from 'd3'
+import * as utils from '../utils'
 
 export default class ScatterPatch {
   constructor (svg, bounds, data, config) {
-    let xScale = d3.scaleLinear()
-        .domain(d3.extent(data, d => d.x))
-        .range([0, bounds.width])
+    let cfg = Object.assign({
+      r: '2px',
+      xScaleType: 'linear',
+      yScaleType: 'linear'
+    }, config)
 
-    let yScale = d3.scaleLinear()
-        .domain(d3.extent(data, d => d.y))
-        .range([bounds.height, 0])
+    let xScale = utils.getScale(
+      cfg.xScaleType,
+      data.map(d => d.x),
+      [0, bounds.width]
+    )
+    let yScale = utils.getScale(
+      cfg.yScaleType,
+      data.map(d => d.y),
+      [bounds.height, 0]
+    )
 
     let patchGroup = svg.append('g')
 
@@ -22,22 +32,22 @@ export default class ScatterPatch {
       .ease(d3.easeQuadOut)
       .attr('cx', d => xScale(d.x) + bounds.x)
       .attr('cy', d => yScale(d.y) + bounds.y)
-      .attr('r', config.r || '2px')
+      .attr('r', cfg.r)
       .attr('data-x', d => d.x)
       .attr('data-y', d => d.y)
 
     // Add tooltip to circles
-    if (config && config.tooltip) {
+    if (cfg.tooltip) {
       patchGroup.selectAll('circle')
         .on('mouseover', function () {
           let elem = d3.select(this)
-          config.tooltip.show(`${parseFloat(elem.attr('data-x')).toFixed(2)}, ${parseFloat(elem.attr('data-y')).toFixed(2)}`)
+          cfg.tooltip.show(`${parseFloat(elem.attr('data-x')).toFixed(2)}, ${parseFloat(elem.attr('data-y')).toFixed(2)}`)
         })
-        .on('mouseout', () => config.tooltip.hide())
+        .on('mouseout', () => cfg.tooltip.hide())
         .on('mousemove', () => {
           let [x, y] = d3.mouse(svg.node())
           let bb = svg.node().getBoundingClientRect()
-          config.tooltip.move(x + bb.left, y + bb.top)
+          cfg.tooltip.move(x + bb.left, y + bb.top)
         })
     }
   }

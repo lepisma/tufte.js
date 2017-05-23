@@ -61,3 +61,15 @@ export function marginalize (data) {
     })
   ]
 }
+
+/**
+ * Get scale depending on the type and range, using the single data series
+ */
+export function getScale (type, dataSeries, range) {
+  return {
+    'linear': d3.scaleLinear,
+    'log': d3.scaleLog
+  }[type]()
+      .domain(d3.extent(dataSeries))
+      .range(range)
+}

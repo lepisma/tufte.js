@@ -20,7 +20,6 @@ export default class LinePlot {
         .attr('height', cfg.height)
 
     // Setup layout
-
     let marginalBand = cfg.marginal ? 50 : 0
 
     let drawingBound = {

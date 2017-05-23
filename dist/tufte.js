@@ -90,7 +90,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.YAxisPatch = exports.XAxisPatch = undefined;
 
@@ -98,34 +98,42 @@ var _d = __webpack_require__(0);
 
 var d3 = _interopRequireWildcard(_d);
 
+var _utils = __webpack_require__(4);
+
+var utils = _interopRequireWildcard(_utils);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var XAxisPatch = exports.XAxisPatch = function XAxisPatch(svg, bounds, data) {
-    _classCallCheck(this, XAxisPatch);
+var XAxisPatch = exports.XAxisPatch = function XAxisPatch(svg, bounds, data, config) {
+  _classCallCheck(this, XAxisPatch);
 
-    var xAxisDiv = svg.append('g').attr('class', 'axis axis--x').attr('transform', 'translate(0, ' + bounds.y + ')');
+  var cfg = Object.assign({ scaleType: 'linear' }, config);
 
-    var xScale = d3.scaleLinear().domain(d3.extent(data, function (d) {
-        return d.x;
-    })).range([bounds.x, bounds.width + bounds.x]);
+  var xAxisDiv = svg.append('g').attr('class', 'axis axis--x').attr('transform', 'translate(0, ' + bounds.y + ')');
 
-    var xAxis = d3.axisBottom(xScale).ticks(5);
-    xAxisDiv.transition().duration(200).call(xAxis);
+  var xScale = utils.getScale(cfg.scaleType, data.map(function (d) {
+    return d.x;
+  }), [bounds.x, bounds.width + bounds.x]);
+
+  var xAxis = d3.axisBottom(xScale).ticks(5);
+  xAxisDiv.transition().duration(200).call(xAxis);
 };
 
-var YAxisPatch = exports.YAxisPatch = function YAxisPatch(svg, bounds, data) {
-    _classCallCheck(this, YAxisPatch);
+var YAxisPatch = exports.YAxisPatch = function YAxisPatch(svg, bounds, data, config) {
+  _classCallCheck(this, YAxisPatch);
 
-    var yAxisDiv = svg.append('g').attr('class', 'axis axis--y').attr('transform', 'translate(' + bounds.x + ', 0)');
+  var cfg = Object.assign({ scaleType: 'linear' }, config);
 
-    var yScale = d3.scaleLinear().domain(d3.extent(data, function (d) {
-        return d.y;
-    })).range([bounds.y + bounds.height, bounds.y]);
+  var yAxisDiv = svg.append('g').attr('class', 'axis axis--y').attr('transform', 'translate(' + bounds.x + ', 0)');
 
-    var yAxis = d3.axisLeft(yScale).ticks(5);
-    yAxisDiv.transition().duration(200).call(yAxis);
+  var yScale = utils.getScale(cfg.scaleType, data.map(function (d) {
+    return d.y;
+  }), [bounds.y + bounds.height, bounds.y]);
+
+  var yAxis = d3.axisLeft(yScale).ticks(5);
+  yAxisDiv.transition().duration(200).call(yAxis);
 };
 
 /***/ }),
@@ -136,41 +144,48 @@ var YAxisPatch = exports.YAxisPatch = function YAxisPatch(svg, bounds, data) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _d = __webpack_require__(0);
 
 var d3 = _interopRequireWildcard(_d);
 
+var _utils = __webpack_require__(4);
+
+var utils = _interopRequireWildcard(_utils);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var LinePatch = function LinePatch(svg, bounds, data) {
-    var config = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : { smooth: false };
+var LinePatch = function LinePatch(svg, bounds, data, config) {
+  _classCallCheck(this, LinePatch);
 
-    _classCallCheck(this, LinePatch);
+  var cfg = Object.assign({
+    smooth: false,
+    xScaleType: 'linear',
+    yScaleType: 'linear'
+  }, config);
 
-    var xScale = d3.scaleLinear().domain(d3.extent(data, function (d) {
-        return d.x;
-    })).range([0, bounds.width]);
+  var xScale = utils.getScale(cfg.xScaleType, data.map(function (d) {
+    return d.x;
+  }), [0, bounds.width]);
+  var yScale = utils.getScale(cfg.yScaleType, data.map(function (d) {
+    return d.y;
+  }), [bounds.height, 0]);
 
-    var yScale = d3.scaleLinear().domain(d3.extent(data, function (d) {
-        return d.y;
-    })).range([bounds.height, 0]);
+  var line = d3.line().x(function (d) {
+    return xScale(d.x) + bounds.x;
+  }).y(function (d) {
+    return yScale(d.y) + bounds.y;
+  });
 
-    var line = d3.line().x(function (d) {
-        return xScale(d.x) + bounds.x;
-    }).y(function (d) {
-        return yScale(d.y) + bounds.y;
-    });
+  if (cfg.smooth) {
+    line = line.curve(d3.curveBasis);
+  }
 
-    if (config.smooth) {
-        line = line.curve(d3.curveBasis);
-    }
-
-    svg.append('g').append('path').attr('class', 'line').datum(data).transition().duration(200).attr('d', line);
+  svg.append('g').append('path').attr('class', 'line').datum(data).transition().duration(200).attr('d', line);
 };
 
 exports.default = LinePatch;
@@ -192,6 +207,10 @@ var _d2 = __webpack_require__(0);
 
 var d3 = _interopRequireWildcard(_d2);
 
+var _utils = __webpack_require__(4);
+
+var utils = _interopRequireWildcard(_utils);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -199,13 +218,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var ScatterPatch = function ScatterPatch(svg, bounds, data, config) {
   _classCallCheck(this, ScatterPatch);
 
-  var xScale = d3.scaleLinear().domain(d3.extent(data, function (d) {
-    return d.x;
-  })).range([0, bounds.width]);
+  var cfg = Object.assign({
+    r: '2px',
+    xScaleType: 'linear',
+    yScaleType: 'linear'
+  }, config);
 
-  var yScale = d3.scaleLinear().domain(d3.extent(data, function (d) {
+  var xScale = utils.getScale(cfg.xScaleType, data.map(function (d) {
+    return d.x;
+  }), [0, bounds.width]);
+  var yScale = utils.getScale(cfg.yScaleType, data.map(function (d) {
     return d.y;
-  })).range([bounds.height, 0]);
+  }), [bounds.height, 0]);
 
   var patchGroup = svg.append('g');
 
@@ -215,19 +239,19 @@ var ScatterPatch = function ScatterPatch(svg, bounds, data, config) {
     return xScale(d.x) + bounds.x;
   }).attr('cy', function (d) {
     return yScale(d.y) + bounds.y;
-  }).attr('r', config.r || '2px').attr('data-x', function (d) {
+  }).attr('r', cfg.r).attr('data-x', function (d) {
     return d.x;
   }).attr('data-y', function (d) {
     return d.y;
   });
 
   // Add tooltip to circles
-  if (config && config.tooltip) {
+  if (cfg.tooltip) {
     patchGroup.selectAll('circle').on('mouseover', function () {
       var elem = d3.select(this);
-      config.tooltip.show(parseFloat(elem.attr('data-x')).toFixed(2) + ', ' + parseFloat(elem.attr('data-y')).toFixed(2));
+      cfg.tooltip.show(parseFloat(elem.attr('data-x')).toFixed(2) + ', ' + parseFloat(elem.attr('data-y')).toFixed(2));
     }).on('mouseout', function () {
-      return config.tooltip.hide();
+      return cfg.tooltip.hide();
     }).on('mousemove', function () {
       var _d3$mouse = d3.mouse(svg.node()),
           _d3$mouse2 = _slicedToArray(_d3$mouse, 2),
@@ -235,7 +259,7 @@ var ScatterPatch = function ScatterPatch(svg, bounds, data, config) {
           y = _d3$mouse2[1];
 
       var bb = svg.node().getBoundingClientRect();
-      config.tooltip.move(x + bb.left, y + bb.top);
+      cfg.tooltip.move(x + bb.left, y + bb.top);
     });
   }
 };
@@ -254,6 +278,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.parseConfig = parseConfig;
 exports.marginalize = marginalize;
+exports.getScale = getScale;
 
 var _d = __webpack_require__(0);
 
@@ -325,6 +350,16 @@ function marginalize(data) {
       y: idx
     };
   })];
+}
+
+/**
+ * Get scale depending on the type and range, using the single data series
+ */
+function getScale(type, dataSeries, range) {
+  return {
+    'linear': d3.scaleLinear,
+    'log': d3.scaleLog
+  }[type]().domain(d3.extent(dataSeries)).range(range);
 }
 
 /***/ }),
@@ -529,7 +564,6 @@ var LinePlot = function LinePlot(target, data, config) {
   var svg = selection.append('svg').attr('width', cfg.width).attr('height', cfg.height);
 
   // Setup layout
-
   var marginalBand = cfg.marginal ? 50 : 0;
 
   var drawingBound = {
@@ -662,7 +696,7 @@ exports = module.exports = __webpack_require__(11)(undefined);
 
 
 // module
-exports.push([module.i, ".axis .domain,\n.axis .tick line {\n  display: none; }\n\n.tufte-plot,\ntufte-tooltip {\n  font-family: et-book, Palatino, \"Palatino Linotype\", \"Palatino LT STD\", \"Book Antiqua\", Georgia, serif; }\n\n.tufte-tooltip {\n  background: #31363b;\n  border-color: #31363b;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: 1px;\n  box-shadow: 8px 8px 20px 0 #aaa;\n  color: #fff;\n  font-family: 'Source Sans Pro';\n  font-size: 13px;\n  padding: 5px 8px;\n  position: fixed; }\n\n.tufte-line-plot .line {\n  fill: none;\n  stroke: #000; }\n\n.tufte-line-plot .point {\n  fill: #000;\n  stroke: #fff;\n  stroke-width: 6px; }\n\n.tufte-scatter-plot .point {\n  fill: #000;\n  stroke: transparent;\n  stroke-width: 5px; }\n\n.tufte-scatter-plot .line {\n  fill: none;\n  stroke: #aaa; }\n", ""]);
+exports.push([module.i, ".axis .domain,\n.axis .tick line {\n  display: none; }\n\n.tufte-plot,\ntufte-tooltip {\n  font-family: et-book, Palatino, \"Palatino Linotype\", \"Palatino LT STD\", \"Book Antiqua\", Georgia, serif; }\n\n.tufte-tooltip {\n  background: #31363b;\n  border-color: #31363b;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: 1px;\n  box-shadow: 8px 8px 20px 0 #aaa;\n  color: #fff;\n  font-family: 'Source Sans Pro';\n  font-size: 13px;\n  padding: 3px 10px;\n  position: fixed; }\n\n.tufte-line-plot .line {\n  fill: none;\n  stroke: #000; }\n\n.tufte-line-plot .point {\n  fill: #000;\n  stroke: #fff;\n  stroke-width: 6px; }\n\n.tufte-scatter-plot .point {\n  fill: #000;\n  stroke: transparent;\n  stroke-width: 5px; }\n\n.tufte-scatter-plot .line {\n  fill: none;\n  stroke: #aaa; }\n", ""]);
 
 // exports
 
