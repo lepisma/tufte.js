@@ -35,7 +35,10 @@ export default class LinePlot {
     }
 
     // Plot axes
-    new XAxisPatch(svg, xAxisBounds, data, { scaleType: cfg.scaleType.x }) // eslint-disable-line no-new
+    new XAxisPatch(svg, xAxisBounds, data, { // eslint-disable-line no-new
+      scaleType: cfg.scaleType.x,
+      axisLabel: cfg.axisLabel.x
+    })
     if (!cfg.clean) {
       let yAxisBounds = {
         height: uheight - cfg.axisBand.x - cfg.axisMargin,
@@ -43,7 +46,10 @@ export default class LinePlot {
         x: cfg.margin.left + cfg.axisBand.y,
         y: cfg.margin.top
       }
-      new YAxisPatch(svg, yAxisBounds, data, { scaleType: cfg.scaleType.y }) // eslint-disable-line no-new
+      new YAxisPatch(svg, yAxisBounds, data, { // eslint-disable-line no-new
+        scaleType: cfg.scaleType.y,
+        axisLabel: cfg.axisLabel.y
+      })
     }
 
     // Plot line

@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
 import * as utils from '../utils'
+import AnnotationPatch from './annotation'
 
 export class XAxisPatch {
   constructor (svg, bounds, data, config) {
@@ -8,6 +9,10 @@ export class XAxisPatch {
     let xAxisDiv = svg.append('g')
         .attr('class', 'axis axis--x')
         .attr('transform', `translate(0, ${bounds.y})`)
+
+    if (cfg.axisLabel) {
+      new AnnotationPatch(svg, {x: bounds.x + bounds.width, y: bounds.y + 40}, cfg.axisLabel) // eslint-disable-line no-new
+    }
 
     let xScale = utils.getScale(
       cfg.scaleType,
@@ -27,6 +32,10 @@ export class YAxisPatch {
     let yAxisDiv = svg.append('g')
         .attr('class', 'axis axis--y')
         .attr('transform', `translate(${bounds.x}, 0)`)
+
+    if (cfg.axisLabel) {
+      new AnnotationPatch(svg, {x: 10, y: bounds.y}, cfg.axisLabel, { horizontal: false }) // eslint-disable-line no-new
+    }
 
     let yScale = utils.getScale(
       cfg.scaleType,

@@ -64,8 +64,14 @@ export default class LinePlot {
     }
 
     // Plot axes
-    new XAxisPatch(svg, xAxisBounds, data, { scaleType: cfg.scaleType.x }) // eslint-disable-line no-new
-    new YAxisPatch(svg, yAxisBounds, data, { scaleType: cfg.scaleType.y }) // eslint-disable-line no-new
+    new XAxisPatch(svg, xAxisBounds, data, { // eslint-disable-line no-new
+      scaleType: cfg.scaleType.x,
+      axisLabel: cfg.axisLabel.x
+    })
+    new YAxisPatch(svg, yAxisBounds, data, { // eslint-disable-line no-new
+      scaleType: cfg.scaleType.y,
+      axisLabel: cfg.axisLabel.y
+    })
 
     // Scatter points with tooltip only if data is less
     let tooltip = new Tooltip(target)

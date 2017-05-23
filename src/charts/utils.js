@@ -29,8 +29,8 @@ export function parseConfig (target, data, config) {
     },
     clean: clean,
     axisBand: {
-      x: 30,
-      y: clean ? 0 : 30
+      x: (config && config.axisLabel && config.axisLabel.x) ? 50 : 30,
+      y: clean ? 0 : (config && config.axisLabel && config.axisLabel.y) ? 50 : 30
     },
     axisMargin: 20,
     axisLabel: {

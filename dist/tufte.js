@@ -102,6 +102,12 @@ var _utils = __webpack_require__(4);
 
 var utils = _interopRequireWildcard(_utils);
 
+var _annotation = __webpack_require__(14);
+
+var _annotation2 = _interopRequireDefault(_annotation);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -112,6 +118,10 @@ var XAxisPatch = exports.XAxisPatch = function XAxisPatch(svg, bounds, data, con
   var cfg = Object.assign({ scaleType: 'linear' }, config);
 
   var xAxisDiv = svg.append('g').attr('class', 'axis axis--x').attr('transform', 'translate(0, ' + bounds.y + ')');
+
+  if (cfg.axisLabel) {
+    new _annotation2.default(svg, { x: bounds.x + bounds.width, y: bounds.y + 40 }, cfg.axisLabel); // eslint-disable-line no-new
+  }
 
   var xScale = utils.getScale(cfg.scaleType, data.map(function (d) {
     return d.x;
@@ -127,6 +137,10 @@ var YAxisPatch = exports.YAxisPatch = function YAxisPatch(svg, bounds, data, con
   var cfg = Object.assign({ scaleType: 'linear' }, config);
 
   var yAxisDiv = svg.append('g').attr('class', 'axis axis--y').attr('transform', 'translate(' + bounds.x + ', 0)');
+
+  if (cfg.axisLabel) {
+    new _annotation2.default(svg, { x: 10, y: bounds.y }, cfg.axisLabel, { horizontal: false }); // eslint-disable-line no-new
+  }
 
   var yScale = utils.getScale(cfg.scaleType, data.map(function (d) {
     return d.y;
@@ -318,8 +332,8 @@ function parseConfig(target, data, config) {
     },
     clean: clean,
     axisBand: {
-      x: 30,
-      y: clean ? 0 : 30
+      x: config && config.axisLabel && config.axisLabel.x ? 50 : 30,
+      y: clean ? 0 : config && config.axisLabel && config.axisLabel.y ? 50 : 30
     },
     axisMargin: 20,
     axisLabel: {
@@ -500,7 +514,10 @@ var LinePlot = function LinePlot(target, data, config) {
   };
 
   // Plot axes
-  new _axis.XAxisPatch(svg, xAxisBounds, data, { scaleType: cfg.scaleType.x }); // eslint-disable-line no-new
+  new _axis.XAxisPatch(svg, xAxisBounds, data, { // eslint-disable-line no-new
+    scaleType: cfg.scaleType.x,
+    axisLabel: cfg.axisLabel.x
+  });
   if (!cfg.clean) {
     var yAxisBounds = {
       height: uheight - cfg.axisBand.x - cfg.axisMargin,
@@ -508,7 +525,10 @@ var LinePlot = function LinePlot(target, data, config) {
       x: cfg.margin.left + cfg.axisBand.y,
       y: cfg.margin.top
     };
-    new _axis.YAxisPatch(svg, yAxisBounds, data, { scaleType: cfg.scaleType.y }); // eslint-disable-line no-new
+    new _axis.YAxisPatch(svg, yAxisBounds, data, { // eslint-disable-line no-new
+      scaleType: cfg.scaleType.y,
+      axisLabel: cfg.axisLabel.y
+    });
   }
 
   // Plot line
@@ -632,8 +652,14 @@ var LinePlot = function LinePlot(target, data, config) {
   }
 
   // Plot axes
-  new _axis.XAxisPatch(svg, xAxisBounds, data, { scaleType: cfg.scaleType.x }); // eslint-disable-line no-new
-  new _axis.YAxisPatch(svg, yAxisBounds, data, { scaleType: cfg.scaleType.y }); // eslint-disable-line no-new
+  new _axis.XAxisPatch(svg, xAxisBounds, data, { // eslint-disable-line no-new
+    scaleType: cfg.scaleType.x,
+    axisLabel: cfg.axisLabel.x
+  });
+  new _axis.YAxisPatch(svg, yAxisBounds, data, { // eslint-disable-line no-new
+    scaleType: cfg.scaleType.y,
+    axisLabel: cfg.axisLabel.y
+  });
 
   // Scatter points with tooltip only if data is less
   var tooltip = new _tooltip2.default(target);
@@ -1210,6 +1236,33 @@ module.exports = function (css) {
 	return fixedCss;
 };
 
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AnnotationPatch = function AnnotationPatch(svg, bounds, text, config) {
+  _classCallCheck(this, AnnotationPatch);
+
+  var cfg = Object.assign({ horizontal: true }, config);
+
+  var textDiv = svg.append('text').attr('class', 'annotation').text(text).attr('transform', 'translate(' + bounds.x + ', ' + bounds.y + ')').style('text-anchor', 'end');
+
+  if (!cfg.horizontal) {
+    textDiv.attr('dy', '1em').attr('transform', textDiv.attr('transform') + ' rotate(-90)');
+  }
+};
+
+exports.default = AnnotationPatch;
 
 /***/ })
 /******/ ]);

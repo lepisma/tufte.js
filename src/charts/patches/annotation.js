@@ -6,13 +6,10 @@ export default class AnnotationPatch {
         .attr('class', 'annotation')
         .text(text)
         .attr('transform', `translate(${bounds.x}, ${bounds.y})`)
-
-    if (cfg.horizontal) {
-      textDiv
-        .style('text-anchor', 'middle')
-    } else {
-      textDiv
         .style('text-anchor', 'end')
+
+    if (!cfg.horizontal) {
+      textDiv
         .attr('dy', '1em')
         .attr('transform', textDiv.attr('transform') + ' rotate(-90)')
     }
