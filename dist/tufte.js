@@ -138,9 +138,59 @@ var YAxisPatch = exports.YAxisPatch = function YAxisPatch(svg, bounds, data, con
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: SyntaxError: Unexpected token, expected , (9:6)\n\n\u001b[0m \u001b[90m  7 | \u001b[39m      smooth\u001b[33m:\u001b[39m \u001b[36mfalse\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m  8 | \u001b[39m      scaleTypes\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 | \u001b[39m      xScaleType\u001b[33m:\u001b[39m \u001b[32m'linear'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m    | \u001b[39m      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 | \u001b[39m      yScaleType\u001b[33m:\u001b[39m \u001b[32m'linear'\u001b[39m\n \u001b[90m 11 | \u001b[39m    }\u001b[33m,\u001b[39m config)\n \u001b[90m 12 | \u001b[39m\u001b[0m\n");
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _d = __webpack_require__(0);
+
+var d3 = _interopRequireWildcard(_d);
+
+var _utils = __webpack_require__(4);
+
+var utils = _interopRequireWildcard(_utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LinePatch = function LinePatch(svg, bounds, data, config) {
+  _classCallCheck(this, LinePatch);
+
+  var cfg = Object.assign({
+    smooth: false,
+    scaleType: {
+      x: 'linear',
+      y: 'linear'
+    }
+  }, config);
+
+  var xScale = utils.getScale(cfg.scaleType.x, data.map(function (d) {
+    return d.x;
+  }), [0, bounds.width]);
+  var yScale = utils.getScale(cfg.scaleType.y, data.map(function (d) {
+    return d.y;
+  }), [bounds.height, 0]);
+
+  var line = d3.line().x(function (d) {
+    return xScale(d.x) + bounds.x;
+  }).y(function (d) {
+    return yScale(d.y) + bounds.y;
+  });
+
+  if (cfg.smooth) {
+    line = line.curve(d3.curveBasis);
+  }
+
+  svg.append('g').append('path').attr('class', 'line').datum(data).transition().duration(200).attr('d', line);
+};
+
+exports.default = LinePatch;
 
 /***/ }),
 /* 3 */
@@ -450,7 +500,7 @@ var LinePlot = function LinePlot(target, data, config) {
   };
 
   // Plot axes
-  new _axis.XAxisPatch(svg, xAxisBounds, data); // eslint-disable-line no-new
+  new _axis.XAxisPatch(svg, xAxisBounds, data, { scaleType: cfg.scaleType.x }); // eslint-disable-line no-new
   if (!cfg.clean) {
     var yAxisBounds = {
       height: uheight - cfg.axisBand.x - cfg.axisMargin,
@@ -458,16 +508,23 @@ var LinePlot = function LinePlot(target, data, config) {
       x: cfg.margin.left + cfg.axisBand.y,
       y: cfg.margin.top
     };
-    new _axis.YAxisPatch(svg, yAxisBounds, data); // eslint-disable-line no-new
+    new _axis.YAxisPatch(svg, yAxisBounds, data, { scaleType: cfg.scaleType.y }); // eslint-disable-line no-new
   }
 
   // Plot line
-  new _line2.default(svg, drawingBound, data, { smooth: cfg.smooth }); // eslint-disable-line no-new
+  new _line2.default(svg, drawingBound, data, { // eslint-disable-line no-new
+    smooth: cfg.smooth,
+    scaleType: cfg.scaleType
+  });
 
   // Scatter points with tooltip only if data is less
   if (cfg.clean) {
     var tooltip = cfg.tooltip === true ? new _tooltip2.default(target) : null;
-    new _scatter2.default(svg, drawingBound, data, { tooltip: tooltip, r: '6px' }); // eslint-disable-line no-new
+    new _scatter2.default(svg, drawingBound, data, { // eslint-disable-line no-new
+      tooltip: tooltip,
+      r: '6px',
+      scaleType: cfg.scaleType
+    });
   }
 };
 
@@ -570,17 +627,17 @@ var LinePlot = function LinePlot(target, data, config) {
         xMarginalizedData = _utils$marginalize2[0],
         yMarginalizedData = _utils$marginalize2[1];
 
-    new _line2.default(svg, xMarginalBounds, xMarginalizedData, { smooth: true }); // eslint-disable-line no-new
-    new _line2.default(svg, yMarginalBounds, yMarginalizedData, { smooth: true }); // eslint-disable-line no-new
+    new _line2.default(svg, xMarginalBounds, xMarginalizedData, { smooth: true, scaleType: cfg.scaleType }); // eslint-disable-line no-new
+    new _line2.default(svg, yMarginalBounds, yMarginalizedData, { smooth: true, scaleType: cfg.scaleType }); // eslint-disable-line no-new
   }
 
   // Plot axes
-  new _axis.XAxisPatch(svg, xAxisBounds, data); // eslint-disable-line no-new
-  new _axis.YAxisPatch(svg, yAxisBounds, data); // eslint-disable-line no-new
+  new _axis.XAxisPatch(svg, xAxisBounds, data, { scaleType: cfg.scaleType.x }); // eslint-disable-line no-new
+  new _axis.YAxisPatch(svg, yAxisBounds, data, { scaleType: cfg.scaleType.y }); // eslint-disable-line no-new
 
   // Scatter points with tooltip only if data is less
   var tooltip = new _tooltip2.default(target);
-  new _scatter2.default(svg, drawingBound, data, { tooltip: tooltip }); // eslint-disable-line no-new
+  new _scatter2.default(svg, drawingBound, data, { tooltip: tooltip, scaleType: cfg.scaleType }); // eslint-disable-line no-new
 };
 
 exports.default = LinePlot;

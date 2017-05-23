@@ -35,7 +35,7 @@ export default class LinePlot {
     }
 
     // Plot axes
-    new XAxisPatch(svg, xAxisBounds, data) // eslint-disable-line no-new
+    new XAxisPatch(svg, xAxisBounds, data, { scaleType: cfg.scaleType.x }) // eslint-disable-line no-new
     if (!cfg.clean) {
       let yAxisBounds = {
         height: uheight - cfg.axisBand.x - cfg.axisMargin,
@@ -43,16 +43,23 @@ export default class LinePlot {
         x: cfg.margin.left + cfg.axisBand.y,
         y: cfg.margin.top
       }
-      new YAxisPatch(svg, yAxisBounds, data) // eslint-disable-line no-new
+      new YAxisPatch(svg, yAxisBounds, data, { scaleType: cfg.scaleType.y }) // eslint-disable-line no-new
     }
 
     // Plot line
-    new LinePatch(svg, drawingBound, data, { smooth: cfg.smooth }) // eslint-disable-line no-new
+    new LinePatch(svg, drawingBound, data, { // eslint-disable-line no-new
+      smooth: cfg.smooth,
+      scaleType: cfg.scaleType
+    })
 
     // Scatter points with tooltip only if data is less
     if (cfg.clean) {
       let tooltip = cfg.tooltip === true ? (new Tooltip(target)) : null
-      new ScatterPatch(svg, drawingBound, data, { tooltip: tooltip, r: '6px' })  // eslint-disable-line no-new
+      new ScatterPatch(svg, drawingBound, data, { // eslint-disable-line no-new
+        tooltip: tooltip,
+        r: '6px',
+        scaleType: cfg.scaleType
+      })
     }
   }
 }

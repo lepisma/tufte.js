@@ -59,16 +59,16 @@ export default class LinePlot {
       }
 
       let [xMarginalizedData, yMarginalizedData] = utils.marginalize(data)
-      new LinePatch(svg, xMarginalBounds, xMarginalizedData, { smooth: true }) // eslint-disable-line no-new
-      new LinePatch(svg, yMarginalBounds, yMarginalizedData, { smooth: true }) // eslint-disable-line no-new
+      new LinePatch(svg, xMarginalBounds, xMarginalizedData, { smooth: true, scaleType: cfg.scaleType }) // eslint-disable-line no-new
+      new LinePatch(svg, yMarginalBounds, yMarginalizedData, { smooth: true, scaleType: cfg.scaleType }) // eslint-disable-line no-new
     }
 
     // Plot axes
-    new XAxisPatch(svg, xAxisBounds, data) // eslint-disable-line no-new
-    new YAxisPatch(svg, yAxisBounds, data) // eslint-disable-line no-new
+    new XAxisPatch(svg, xAxisBounds, data, { scaleType: cfg.scaleType.x }) // eslint-disable-line no-new
+    new YAxisPatch(svg, yAxisBounds, data, { scaleType: cfg.scaleType.y }) // eslint-disable-line no-new
 
     // Scatter points with tooltip only if data is less
     let tooltip = new Tooltip(target)
-    new ScatterPatch(svg, drawingBound, data, { tooltip: tooltip })  // eslint-disable-line no-new
+    new ScatterPatch(svg, drawingBound, data, { tooltip: tooltip, scaleType: cfg.scaleType })  // eslint-disable-line no-new
   }
 }
