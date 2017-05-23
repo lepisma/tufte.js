@@ -41,7 +41,9 @@ export function parseConfig (target, data, config) {
       x: 'linear',
       y: 'linear'
     },
-    tooltip: true
+    tooltip: true,
+    smoothing: true,
+    marginal: true
   }, config)
 }
 

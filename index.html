@@ -115,12 +115,12 @@
      // Simple scatter plot
      new tufte.ScatterPlot('#scatter-plot', [...Array(200).keys()].map(d => {
        return {x: pgen.next().value, y: pgen2.next().value }
-     }), { axisLabel: {x: 'Also randoms', y: 'Randoms' } })
+     }), { axisLabel: {x: 'Also randoms', y: 'Randoms' }, marginal: false })
 
        // Scatter plot with marginal
        new tufte.ScatterPlot('#scatter-plot-with-marginal', [...Array(200).keys()].map(d => {
          return {x: pgen.next().value, y: pgen2.next().value}
-       }), { marginal: true })
+       }))
     </script>
   </body>
 </html>
