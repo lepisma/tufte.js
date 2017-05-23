@@ -114,8 +114,8 @@
 
      // Simple scatter plot
      new tufte.ScatterPlot('#scatter-plot', [...Array(200).keys()].map(d => {
-       return {x: pgen.next().value + 0.1, y: pgen2.next().value }
-     }), { scaleType: {x: 'log', y: 'linear'} })
+       return {x: pgen.next().value, y: pgen2.next().value }
+     }))
 
      // Scatter plot with marginal
      new tufte.ScatterPlot('#scatter-plot-with-marginal', [...Array(200).keys()].map(d => {
