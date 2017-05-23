@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -215,7 +215,7 @@ var ScatterPatch = function ScatterPatch(svg, bounds, data, config) {
     return xScale(d.x) + bounds.x;
   }).attr('cy', function (d) {
     return yScale(d.y) + bounds.y;
-  }).attr('r', '6px').attr('data-x', function (d) {
+  }).attr('r', config.r || '2px').attr('data-x', function (d) {
     return d.x;
   }).attr('data-y', function (d) {
     return d.y;
@@ -469,7 +469,7 @@ var LinePlot = function LinePlot(target, data, config) {
   // Scatter points with tooltip only if data is less
   if (cfg.clean) {
     var tooltip = new _tooltip2.default(target);
-    new _scatter2.default(svg, drawingBound, data, { tooltip: tooltip }); // eslint-disable-line no-new
+    new _scatter2.default(svg, drawingBound, data, { tooltip: tooltip, r: '6px' }); // eslint-disable-line no-new
   }
 };
 
@@ -592,52 +592,10 @@ exports.default = LinePlot;
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Slopegraph = function Slopegraph() {
-  _classCallCheck(this, Slopegraph);
-
-  throw new Error('Not implemented');
-};
-
-exports.default = Slopegraph;
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var StemLeafPlot = function StemLeafPlot() {
-  _classCallCheck(this, StemLeafPlot);
-
-  throw new Error('Not implemented');
-};
-
-exports.default = StemLeafPlot;
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(12);
+var content = __webpack_require__(10);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -645,7 +603,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(14)(content, options);
+var update = __webpack_require__(12)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -662,7 +620,7 @@ if(false) {
 }
 
 /***/ }),
-/* 11 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -671,7 +629,7 @@ if(false) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.StemLeafPlot = exports.Slopegraph = exports.ScatterPlot = exports.LinePlot = undefined;
+exports.ScatterPlot = exports.LinePlot = undefined;
 
 var _line = __webpack_require__(6);
 
@@ -691,44 +649,26 @@ Object.defineProperty(exports, 'ScatterPlot', {
   }
 });
 
-var _slopegraph = __webpack_require__(8);
-
-Object.defineProperty(exports, 'Slopegraph', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_slopegraph).default;
-  }
-});
-
-var _stemLeaf = __webpack_require__(9);
-
-Object.defineProperty(exports, 'StemLeafPlot', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_stemLeaf).default;
-  }
-});
-
-__webpack_require__(10);
+__webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(13)(undefined);
+exports = module.exports = __webpack_require__(11)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".axis .domain,\n.axis .tick line {\n  display: none; }\n\n.tufte-tooltip {\n  background: #fff;\n  box-shadow: 1px 1px 3px 1px #aaa;\n  font-family: serif;\n  font-size: 11px;\n  padding: 4px 7px;\n  position: fixed; }\n\n.tufte-line-plot .line {\n  fill: none;\n  stroke: #000; }\n\n.tufte-line-plot .point {\n  fill: #000;\n  stroke: #fff;\n  stroke-width: 6px; }\n\n.tufte-scatter-plot .point {\n  fill: #000;\n  r: 2px; }\n\n.tufte-scatter-plot .line {\n  fill: none;\n  stroke: #aaa; }\n", ""]);
+exports.push([module.i, ".axis .domain,\n.axis .tick line {\n  display: none; }\n\n.tufte-plot,\ntufte-tooltip {\n  font-family: et-book, Palatino, \"Palatino Linotype\", \"Palatino LT STD\", \"Book Antiqua\", Georgia, serif; }\n\n.tufte-tooltip {\n  background: #31363b;\n  border-color: #31363b;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: 1px;\n  box-shadow: 8px 8px 20px 0 #aaa;\n  color: #fff;\n  font-family: 'Source Sans Pro';\n  font-size: 13px;\n  padding: 5px 8px;\n  position: fixed; }\n\n.tufte-line-plot .line {\n  fill: none;\n  stroke: #000; }\n\n.tufte-line-plot .point {\n  fill: #000;\n  stroke: #fff;\n  stroke-width: 6px; }\n\n.tufte-scatter-plot .point {\n  fill: #000;\n  stroke: transparent;\n  stroke-width: 5px; }\n\n.tufte-scatter-plot .line {\n  fill: none;\n  stroke: #aaa; }\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports) {
 
 /*
@@ -810,7 +750,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -847,7 +787,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(15);
+	fixUrls = __webpack_require__(13);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -1123,7 +1063,7 @@ function updateLink(linkElement, options, obj) {
 
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports) {
 
 
