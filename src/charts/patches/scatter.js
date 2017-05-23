@@ -22,7 +22,7 @@ export default class ScatterPatch {
       .ease(d3.easeQuadOut)
       .attr('cx', d => xScale(d.x) + bounds.x)
       .attr('cy', d => yScale(d.y) + bounds.y)
-      .attr('r', '6px')
+      .attr('r', config.r || '2px')
       .attr('data-x', d => d.x)
       .attr('data-y', d => d.y)
 

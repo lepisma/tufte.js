@@ -52,7 +52,7 @@ export default class LinePlot {
     // Scatter points with tooltip only if data is less
     if (cfg.clean) {
       let tooltip = new Tooltip(target)
-      new ScatterPatch(svg, drawingBound, data, { tooltip: tooltip })  // eslint-disable-line no-new
+      new ScatterPatch(svg, drawingBound, data, { tooltip: tooltip, r: '6px' })  // eslint-disable-line no-new
     }
   }
 }
