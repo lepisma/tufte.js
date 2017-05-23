@@ -1,7 +1,7 @@
 // Colors
 $black: #000;
 $white: #fff;
-$gray: #333;
+$gray: #31363b;
 $light: #aaa;
 
 .axis {
@@ -11,11 +11,21 @@ $light: #aaa;
   }
 }
 
+.tufte-plot,
+,tufte-tooltip {
+  font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+}
+
 .tufte-tooltip {
-  background: $white;
-  box-shadow: 1px 1px 3px 1px $light;
-  font-family: serif;
-  font-size: 11px;
-  padding: 4px 7px;
+  background: $gray;
+  border-color: $gray;
+  border-radius: 2px;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 8px 8px 20px 0 $light;
+  color: $white;
+  font-family: 'Source Sans Pro';
+  font-size: 13px;
+  padding: 5px 8px;
   position: fixed;
 }
