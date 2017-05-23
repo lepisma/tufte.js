@@ -318,8 +318,8 @@ function parseConfig(target, data, config) {
     selectionWidth = config.width;
   }
 
-  // Heuristic to check whether we can make the plot cleaner
-  var clean = selectionWidth / data.length > 15;
+  // Heuristic to check whether we can make the dotline plot
+  var dotLinePlot = selectionWidth / data.length > 15;
 
   return Object.assign({
     height: selectionHeight,
@@ -330,10 +330,10 @@ function parseConfig(target, data, config) {
       left: 10,
       right: 20
     },
-    clean: clean,
+    dotLinePlot: dotLinePlot,
     axisBand: {
       x: config && config.axisLabel && config.axisLabel.x ? 50 : 30,
-      y: clean ? 0 : config && config.axisLabel && config.axisLabel.y ? 50 : 30
+      y: dotLinePlot ? 0 : config && config.axisLabel && config.axisLabel.y ? 50 : 30
     },
     axisMargin: 20,
     axisLabel: {
@@ -518,7 +518,7 @@ var LinePlot = function LinePlot(target, data, config) {
     scaleType: cfg.scaleType.x,
     axisLabel: cfg.axisLabel.x
   });
-  if (!cfg.clean) {
+  if (!cfg.dotLinePlot) {
     var yAxisBounds = {
       height: uheight - cfg.axisBand.x - cfg.axisMargin,
       width: cfg.axisBand.y,
@@ -538,7 +538,7 @@ var LinePlot = function LinePlot(target, data, config) {
   });
 
   // Scatter points with tooltip only if data is less
-  if (cfg.clean) {
+  if (cfg.dotLinePlot) {
     var tooltip = cfg.tooltip === true ? new _tooltip2.default(target) : null;
     new _scatter2.default(svg, drawingBound, data, { // eslint-disable-line no-new
       tooltip: tooltip,

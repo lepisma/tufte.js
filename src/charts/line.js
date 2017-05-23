@@ -39,7 +39,7 @@ export default class LinePlot {
       scaleType: cfg.scaleType.x,
       axisLabel: cfg.axisLabel.x
     })
-    if (!cfg.clean) {
+    if (!cfg.dotLinePlot) {
       let yAxisBounds = {
         height: uheight - cfg.axisBand.x - cfg.axisMargin,
         width: cfg.axisBand.y,
@@ -59,7 +59,7 @@ export default class LinePlot {
     })
 
     // Scatter points with tooltip only if data is less
-    if (cfg.clean) {
+    if (cfg.dotLinePlot) {
       let tooltip = cfg.tooltip === true ? (new Tooltip(target)) : null
       new ScatterPatch(svg, drawingBound, data, { // eslint-disable-line no-new
         tooltip: tooltip,

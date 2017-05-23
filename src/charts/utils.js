@@ -15,8 +15,8 @@ export function parseConfig (target, data, config) {
     selectionWidth = config.width
   }
 
-  // Heuristic to check whether we can make the plot cleaner
-  let clean = selectionWidth / data.length > 15
+  // Heuristic to check whether we can make the dotline plot
+  let dotLinePlot = selectionWidth / data.length > 15
 
   return Object.assign({
     height: selectionHeight,
@@ -27,10 +27,10 @@ export function parseConfig (target, data, config) {
       left: 10,
       right: 20
     },
-    clean: clean,
+    dotLinePlot: dotLinePlot,
     axisBand: {
       x: (config && config.axisLabel && config.axisLabel.x) ? 50 : 30,
-      y: clean ? 0 : (config && config.axisLabel && config.axisLabel.y) ? 50 : 30
+      y: dotLinePlot ? 0 : (config && config.axisLabel && config.axisLabel.y) ? 50 : 30
     },
     axisMargin: 20,
     axisLabel: {
