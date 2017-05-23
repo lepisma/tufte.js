@@ -12,8 +12,8 @@ export default class LinePlot {
     let selection = d3.select(target)
         .attr('class', 'tufte-scatter-plot')
 
-    let uheight = cfg.height - cfg.margins.top - cfg.margins.bottom
-    let uwidth = cfg.width - cfg.margins.left - cfg.margins.right
+    let uheight = cfg.height - cfg.margin.top - cfg.margin.bottom
+    let uwidth = cfg.width - cfg.margin.left - cfg.margin.right
 
     let svg = selection.append('svg')
         .attr('width', cfg.width)
@@ -23,24 +23,24 @@ export default class LinePlot {
     let marginalBand = cfg.marginal ? 50 : 0
 
     let drawingBound = {
-      height: uheight - cfg.axisBands.x - cfg.axisMargin - marginalBand,
-      width: uwidth - cfg.axisBands.y - cfg.axisMargin - marginalBand,
-      x: cfg.margins.left + cfg.axisBands.y + cfg.axisMargin + marginalBand,
-      y: cfg.margins.top
+      height: uheight - cfg.axisBand.x - cfg.axisMargin - marginalBand,
+      width: uwidth - cfg.axisBand.y - cfg.axisMargin - marginalBand,
+      x: cfg.margin.left + cfg.axisBand.y + cfg.axisMargin + marginalBand,
+      y: cfg.margin.top
     }
 
     let xAxisBounds = {
-      height: cfg.axisBands.x,
-      width: uwidth - cfg.axisBands.y - cfg.axisMargin - marginalBand,
-      x: cfg.margins.left + cfg.axisBands.y + cfg.axisMargin + marginalBand,
-      y: cfg.margins.top + uheight - cfg.axisBands.x
+      height: cfg.axisBand.x,
+      width: uwidth - cfg.axisBand.y - cfg.axisMargin - marginalBand,
+      x: cfg.margin.left + cfg.axisBand.y + cfg.axisMargin + marginalBand,
+      y: cfg.margin.top + uheight - cfg.axisBand.x
     }
 
     let yAxisBounds = {
-      height: uheight - cfg.axisBands.x - cfg.axisMargin - marginalBand,
-      width: cfg.axisBands.y,
-      x: cfg.margins.left + cfg.axisBands.y,
-      y: cfg.margins.top
+      height: uheight - cfg.axisBand.x - cfg.axisMargin - marginalBand,
+      width: cfg.axisBand.y,
+      x: cfg.margin.left + cfg.axisBand.y,
+      y: cfg.margin.top
     }
 
     if (marginalBand > 0) {
@@ -48,14 +48,14 @@ export default class LinePlot {
         height: marginalBand,
         width: drawingBound.width,
         x: drawingBound.x,
-        y: cfg.margins.top + drawingBound.height + cfg.axisMargin
+        y: cfg.margin.top + drawingBound.height + cfg.axisMargin
       }
 
       let yMarginalBounds = {
         height: drawingBound.height,
         width: marginalBand,
-        x: cfg.margins.left + cfg.axisBands.y,
-        y: cfg.margins.top
+        x: cfg.margin.left + cfg.axisBand.y,
+        y: cfg.margin.top
       }
 
       let [xMarginalizedData, yMarginalizedData] = utils.marginalize(data)

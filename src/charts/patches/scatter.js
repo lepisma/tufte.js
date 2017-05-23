@@ -5,17 +5,19 @@ export default class ScatterPatch {
   constructor (svg, bounds, data, config) {
     let cfg = Object.assign({
       r: '2px',
-      xScaleType: 'linear',
-      yScaleType: 'linear'
+      scaleType: {
+        x: 'linear',
+        y: 'linear'
+      }
     }, config)
 
     let xScale = utils.getScale(
-      cfg.xScaleType,
+      cfg.scaleType.x,
       data.map(d => d.x),
       [0, bounds.width]
     )
     let yScale = utils.getScale(
-      cfg.yScaleType,
+      cfg.scaleType.y,
       data.map(d => d.y),
       [bounds.height, 0]
     )

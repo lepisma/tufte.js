@@ -138,57 +138,9 @@ var YAxisPatch = exports.YAxisPatch = function YAxisPatch(svg, bounds, data, con
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _d = __webpack_require__(0);
-
-var d3 = _interopRequireWildcard(_d);
-
-var _utils = __webpack_require__(4);
-
-var utils = _interopRequireWildcard(_utils);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var LinePatch = function LinePatch(svg, bounds, data, config) {
-  _classCallCheck(this, LinePatch);
-
-  var cfg = Object.assign({
-    smooth: false,
-    xScaleType: 'linear',
-    yScaleType: 'linear'
-  }, config);
-
-  var xScale = utils.getScale(cfg.xScaleType, data.map(function (d) {
-    return d.x;
-  }), [0, bounds.width]);
-  var yScale = utils.getScale(cfg.yScaleType, data.map(function (d) {
-    return d.y;
-  }), [bounds.height, 0]);
-
-  var line = d3.line().x(function (d) {
-    return xScale(d.x) + bounds.x;
-  }).y(function (d) {
-    return yScale(d.y) + bounds.y;
-  });
-
-  if (cfg.smooth) {
-    line = line.curve(d3.curveBasis);
-  }
-
-  svg.append('g').append('path').attr('class', 'line').datum(data).transition().duration(200).attr('d', line);
-};
-
-exports.default = LinePatch;
+throw new Error("Module build failed: SyntaxError: Unexpected token, expected , (9:6)\n\n\u001b[0m \u001b[90m  7 | \u001b[39m      smooth\u001b[33m:\u001b[39m \u001b[36mfalse\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m  8 | \u001b[39m      scaleTypes\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  9 | \u001b[39m      xScaleType\u001b[33m:\u001b[39m \u001b[32m'linear'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m    | \u001b[39m      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 10 | \u001b[39m      yScaleType\u001b[33m:\u001b[39m \u001b[32m'linear'\u001b[39m\n \u001b[90m 11 | \u001b[39m    }\u001b[33m,\u001b[39m config)\n \u001b[90m 12 | \u001b[39m\u001b[0m\n");
 
 /***/ }),
 /* 3 */
@@ -220,14 +172,16 @@ var ScatterPatch = function ScatterPatch(svg, bounds, data, config) {
 
   var cfg = Object.assign({
     r: '2px',
-    xScaleType: 'linear',
-    yScaleType: 'linear'
+    scaleType: {
+      x: 'linear',
+      y: 'linear'
+    }
   }, config);
 
-  var xScale = utils.getScale(cfg.xScaleType, data.map(function (d) {
+  var xScale = utils.getScale(cfg.scaleType.x, data.map(function (d) {
     return d.x;
   }), [0, bounds.width]);
-  var yScale = utils.getScale(cfg.yScaleType, data.map(function (d) {
+  var yScale = utils.getScale(cfg.scaleType.y, data.map(function (d) {
     return d.y;
   }), [bounds.height, 0]);
 
@@ -306,18 +260,27 @@ function parseConfig(target, data, config) {
   return Object.assign({
     height: selectionHeight,
     width: selectionWidth,
-    margins: {
+    margin: {
       top: 10,
       bottom: 10,
       left: 10,
       right: 20
     },
     clean: clean,
-    axisBands: {
+    axisBand: {
       x: 30,
       y: clean ? 0 : 30
     },
-    axisMargin: 20
+    axisMargin: 20,
+    axisLabel: {
+      x: null,
+      y: null
+    },
+    scaleType: {
+      x: 'linear',
+      y: 'linear'
+    },
+    tooltip: true
   }, config);
 }
 
@@ -466,34 +429,34 @@ var LinePlot = function LinePlot(target, data, config) {
 
   var selection = d3.select(target).attr('class', 'tufte-line-plot');
 
-  var uheight = cfg.height - cfg.margins.top - cfg.margins.bottom;
-  var uwidth = cfg.width - cfg.margins.left - cfg.margins.right;
+  var uheight = cfg.height - cfg.margin.top - cfg.margin.bottom;
+  var uwidth = cfg.width - cfg.margin.left - cfg.margin.right;
 
   var svg = selection.append('svg').attr('width', cfg.width).attr('height', cfg.height);
 
   // Setup layout
   var drawingBound = {
-    height: uheight - cfg.axisBands.x - cfg.axisMargin,
-    width: uwidth - cfg.axisBands.y - cfg.axisMargin,
-    x: cfg.margins.left + cfg.axisBands.y + cfg.axisMargin,
-    y: cfg.margins.top
+    height: uheight - cfg.axisBand.x - cfg.axisMargin,
+    width: uwidth - cfg.axisBand.y - cfg.axisMargin,
+    x: cfg.margin.left + cfg.axisBand.y + cfg.axisMargin,
+    y: cfg.margin.top
   };
 
   var xAxisBounds = {
-    height: cfg.axisBands.x,
-    width: uwidth - cfg.axisBands.y - cfg.axisMargin,
-    x: cfg.margins.left + cfg.axisBands.y + cfg.axisMargin,
-    y: cfg.margins.top + uheight - cfg.axisBands.x
+    height: cfg.axisBand.x,
+    width: uwidth - cfg.axisBand.y - cfg.axisMargin,
+    x: cfg.margin.left + cfg.axisBand.y + cfg.axisMargin,
+    y: cfg.margin.top + uheight - cfg.axisBand.x
   };
 
   // Plot axes
   new _axis.XAxisPatch(svg, xAxisBounds, data); // eslint-disable-line no-new
   if (!cfg.clean) {
     var yAxisBounds = {
-      height: uheight - cfg.axisBands.x - cfg.axisMargin,
-      width: cfg.axisBands.y,
-      x: cfg.margins.left + cfg.axisBands.y,
-      y: cfg.margins.top
+      height: uheight - cfg.axisBand.x - cfg.axisMargin,
+      width: cfg.axisBand.y,
+      x: cfg.margin.left + cfg.axisBand.y,
+      y: cfg.margin.top
     };
     new _axis.YAxisPatch(svg, yAxisBounds, data); // eslint-disable-line no-new
   }
@@ -503,7 +466,7 @@ var LinePlot = function LinePlot(target, data, config) {
 
   // Scatter points with tooltip only if data is less
   if (cfg.clean) {
-    var tooltip = new _tooltip2.default(target);
+    var tooltip = cfg.tooltip === true ? new _tooltip2.default(target) : null;
     new _scatter2.default(svg, drawingBound, data, { tooltip: tooltip, r: '6px' }); // eslint-disable-line no-new
   }
 };
@@ -558,8 +521,8 @@ var LinePlot = function LinePlot(target, data, config) {
 
   var selection = d3.select(target).attr('class', 'tufte-scatter-plot');
 
-  var uheight = cfg.height - cfg.margins.top - cfg.margins.bottom;
-  var uwidth = cfg.width - cfg.margins.left - cfg.margins.right;
+  var uheight = cfg.height - cfg.margin.top - cfg.margin.bottom;
+  var uwidth = cfg.width - cfg.margin.left - cfg.margin.right;
 
   var svg = selection.append('svg').attr('width', cfg.width).attr('height', cfg.height);
 
@@ -567,24 +530,24 @@ var LinePlot = function LinePlot(target, data, config) {
   var marginalBand = cfg.marginal ? 50 : 0;
 
   var drawingBound = {
-    height: uheight - cfg.axisBands.x - cfg.axisMargin - marginalBand,
-    width: uwidth - cfg.axisBands.y - cfg.axisMargin - marginalBand,
-    x: cfg.margins.left + cfg.axisBands.y + cfg.axisMargin + marginalBand,
-    y: cfg.margins.top
+    height: uheight - cfg.axisBand.x - cfg.axisMargin - marginalBand,
+    width: uwidth - cfg.axisBand.y - cfg.axisMargin - marginalBand,
+    x: cfg.margin.left + cfg.axisBand.y + cfg.axisMargin + marginalBand,
+    y: cfg.margin.top
   };
 
   var xAxisBounds = {
-    height: cfg.axisBands.x,
-    width: uwidth - cfg.axisBands.y - cfg.axisMargin - marginalBand,
-    x: cfg.margins.left + cfg.axisBands.y + cfg.axisMargin + marginalBand,
-    y: cfg.margins.top + uheight - cfg.axisBands.x
+    height: cfg.axisBand.x,
+    width: uwidth - cfg.axisBand.y - cfg.axisMargin - marginalBand,
+    x: cfg.margin.left + cfg.axisBand.y + cfg.axisMargin + marginalBand,
+    y: cfg.margin.top + uheight - cfg.axisBand.x
   };
 
   var yAxisBounds = {
-    height: uheight - cfg.axisBands.x - cfg.axisMargin - marginalBand,
-    width: cfg.axisBands.y,
-    x: cfg.margins.left + cfg.axisBands.y,
-    y: cfg.margins.top
+    height: uheight - cfg.axisBand.x - cfg.axisMargin - marginalBand,
+    width: cfg.axisBand.y,
+    x: cfg.margin.left + cfg.axisBand.y,
+    y: cfg.margin.top
   };
 
   if (marginalBand > 0) {
@@ -592,14 +555,14 @@ var LinePlot = function LinePlot(target, data, config) {
       height: marginalBand,
       width: drawingBound.width,
       x: drawingBound.x,
-      y: cfg.margins.top + drawingBound.height + cfg.axisMargin
+      y: cfg.margin.top + drawingBound.height + cfg.axisMargin
     };
 
     var yMarginalBounds = {
       height: drawingBound.height,
       width: marginalBand,
-      x: cfg.margins.left + cfg.axisBands.y,
-      y: cfg.margins.top
+      x: cfg.margin.left + cfg.axisBand.y,
+      y: cfg.margin.top
     };
 
     var _utils$marginalize = utils.marginalize(data),

@@ -5,6 +5,7 @@ export default class LinePatch {
   constructor (svg, bounds, data, config) {
     let cfg = Object.assign({
       smooth: false,
+      scaleTypes
       xScaleType: 'linear',
       yScaleType: 'linear'
     }, config)

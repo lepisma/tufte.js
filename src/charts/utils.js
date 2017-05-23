@@ -21,18 +21,27 @@ export function parseConfig (target, data, config) {
   return Object.assign({
     height: selectionHeight,
     width: selectionWidth,
-    margins: {
+    margin: {
       top: 10,
       bottom: 10,
       left: 10,
       right: 20
     },
     clean: clean,
-    axisBands: {
+    axisBand: {
       x: 30,
       y: clean ? 0 : 30
     },
-    axisMargin: 20
+    axisMargin: 20,
+    axisLabel: {
+      x: null,
+      y: null
+    },
+    scaleType: {
+      x: 'linear',
+      y: 'linear'
+    },
+    tooltip: true
   }, config)
 }
 
