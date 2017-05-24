@@ -398,7 +398,7 @@ var _d = __webpack_require__(0);
 
 var d3 = _interopRequireWildcard(_d);
 
-var _config = __webpack_require__(16);
+var _config = __webpack_require__(17);
 
 var _config2 = _interopRequireDefault(_config);
 
@@ -465,7 +465,7 @@ var _utils = __webpack_require__(1);
 
 var utils = _interopRequireWildcard(_utils);
 
-var _config = __webpack_require__(16);
+var _config = __webpack_require__(17);
 
 var _config2 = _interopRequireDefault(_config);
 
@@ -478,10 +478,6 @@ var _line = __webpack_require__(3);
 var _line2 = _interopRequireDefault(_line);
 
 var _axis = __webpack_require__(2);
-
-var _tooltip = __webpack_require__(5);
-
-var _tooltip2 = _interopRequireDefault(_tooltip);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -586,7 +582,7 @@ exports.default = AnnotationPatch;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Config = exports.ScatterPlot = exports.LinePlot = undefined;
+exports.ScatterPlot = exports.LinePlot = undefined;
 
 var _line = __webpack_require__(6);
 
@@ -603,15 +599,6 @@ Object.defineProperty(exports, 'ScatterPlot', {
   enumerable: true,
   get: function get() {
     return _interopRequireDefault(_scatter).default;
-  }
-});
-
-var _utils = __webpack_require__(1);
-
-Object.defineProperty(exports, 'Config', {
-  enumerable: true,
-  get: function get() {
-    return _utils.Config;
   }
 });
 
@@ -1358,7 +1345,8 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 16 */
+/* 16 */,
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

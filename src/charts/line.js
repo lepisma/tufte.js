@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import parseConfig from './config'
+import parseConfig from '../config'
 import LinePatch from './patches/line'
 import ScatterPatch from './patches/scatter'
 import { XAxisPatch, YAxisPatch } from './patches/axis'
