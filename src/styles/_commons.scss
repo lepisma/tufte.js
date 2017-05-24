@@ -12,8 +12,13 @@ $light: #aaa;
 }
 
 .tufte-plot,
-,tufte-tooltip {
+tufte-tooltip,
+.annotation {
   font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+}
+
+.annotation {
+  font-size: 12px;
 }
 
 .tufte-tooltip {
