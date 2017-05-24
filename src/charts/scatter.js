@@ -4,7 +4,6 @@ import parseConfig from './config'
 import ScatterPatch from './patches/scatter'
 import LinePatch from './patches/line'
 import { XAxisPatch, YAxisPatch } from './patches/axis'
-import Tooltip from '../tooltip'
 
 export default class ScatterPlot {
   constructor (target, data, config) {
