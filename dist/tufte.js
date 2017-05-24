@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -92,209 +92,6 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.YAxisPatch = exports.XAxisPatch = undefined;
-
-var _d = __webpack_require__(0);
-
-var d3 = _interopRequireWildcard(_d);
-
-var _utils = __webpack_require__(4);
-
-var utils = _interopRequireWildcard(_utils);
-
-var _annotation = __webpack_require__(14);
-
-var _annotation2 = _interopRequireDefault(_annotation);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var XAxisPatch = exports.XAxisPatch = function XAxisPatch(svg, bounds, data, config) {
-  _classCallCheck(this, XAxisPatch);
-
-  var cfg = Object.assign({ scaleType: 'linear' }, config);
-
-  var xAxisDiv = svg.append('g').attr('class', 'axis axis--x').attr('transform', 'translate(0, ' + bounds.y + ')');
-
-  if (cfg.axisLabel) {
-    new _annotation2.default(svg, { x: bounds.x + bounds.width, y: bounds.y + 40 }, cfg.axisLabel); // eslint-disable-line no-new
-  }
-
-  var xScale = utils.getScale(cfg.scaleType, data.map(function (d) {
-    return d.x;
-  }), [bounds.x, bounds.width + bounds.x]);
-
-  var xAxis = d3.axisBottom(xScale).ticks(5);
-  xAxisDiv.transition().duration(200).call(xAxis);
-};
-
-var YAxisPatch = exports.YAxisPatch = function YAxisPatch(svg, bounds, data, config) {
-  _classCallCheck(this, YAxisPatch);
-
-  var cfg = Object.assign({ scaleType: 'linear' }, config);
-
-  var yAxisDiv = svg.append('g').attr('class', 'axis axis--y').attr('transform', 'translate(' + bounds.x + ', 0)');
-
-  if (cfg.axisLabel) {
-    new _annotation2.default(svg, { x: 10, y: bounds.y }, cfg.axisLabel, { horizontal: false }); // eslint-disable-line no-new
-  }
-
-  var yScale = utils.getScale(cfg.scaleType, data.map(function (d) {
-    return d.y;
-  }), [bounds.y + bounds.height, bounds.y]);
-
-  var yAxis = d3.axisLeft(yScale).ticks(5);
-  yAxisDiv.transition().duration(200).call(yAxis);
-};
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _d = __webpack_require__(0);
-
-var d3 = _interopRequireWildcard(_d);
-
-var _utils = __webpack_require__(4);
-
-var utils = _interopRequireWildcard(_utils);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var LinePatch = function LinePatch(svg, bounds, data, config) {
-  _classCallCheck(this, LinePatch);
-
-  var cfg = Object.assign({
-    smooth: false,
-    scaleType: {
-      x: 'linear',
-      y: 'linear'
-    }
-  }, config);
-
-  var xScale = utils.getScale(cfg.scaleType.x, data.map(function (d) {
-    return d.x;
-  }), [0, bounds.width]);
-  var yScale = utils.getScale(cfg.scaleType.y, data.map(function (d) {
-    return d.y;
-  }), [bounds.height, 0]);
-
-  var line = d3.line().x(function (d) {
-    return xScale(d.x) + bounds.x;
-  }).y(function (d) {
-    return yScale(d.y) + bounds.y;
-  });
-
-  if (cfg.smooth) {
-    line = line.curve(d3.curveBasis);
-  }
-
-  svg.append('g').append('path').attr('class', 'line').datum(data).transition().duration(200).attr('d', line);
-};
-
-exports.default = LinePatch;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _d2 = __webpack_require__(0);
-
-var d3 = _interopRequireWildcard(_d2);
-
-var _utils = __webpack_require__(4);
-
-var utils = _interopRequireWildcard(_utils);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var ScatterPatch = function ScatterPatch(svg, bounds, data, config) {
-  _classCallCheck(this, ScatterPatch);
-
-  var cfg = Object.assign({
-    r: '2px',
-    scaleType: {
-      x: 'linear',
-      y: 'linear'
-    }
-  }, config);
-
-  var xScale = utils.getScale(cfg.scaleType.x, data.map(function (d) {
-    return d.x;
-  }), [0, bounds.width]);
-  var yScale = utils.getScale(cfg.scaleType.y, data.map(function (d) {
-    return d.y;
-  }), [bounds.height, 0]);
-
-  var patchGroup = svg.append('g');
-
-  var circles = patchGroup.selectAll('.point').data(data);
-
-  circles.enter().append('circle').merge(circles).attr('class', 'point').transition(200).ease(d3.easeQuadOut).attr('cx', function (d) {
-    return xScale(d.x) + bounds.x;
-  }).attr('cy', function (d) {
-    return yScale(d.y) + bounds.y;
-  }).attr('r', cfg.r).attr('data-x', function (d) {
-    return d.x;
-  }).attr('data-y', function (d) {
-    return d.y;
-  });
-
-  // Add tooltip to circles
-  if (cfg.tooltip) {
-    patchGroup.selectAll('circle').on('mouseover', function () {
-      var elem = d3.select(this);
-      cfg.tooltip.show(parseFloat(elem.attr('data-x')).toFixed(2) + ', ' + parseFloat(elem.attr('data-y')).toFixed(2));
-    }).on('mouseout', function () {
-      return cfg.tooltip.hide();
-    }).on('mousemove', function () {
-      var _d3$mouse = d3.mouse(svg.node()),
-          _d3$mouse2 = _slicedToArray(_d3$mouse, 2),
-          x = _d3$mouse2[0],
-          y = _d3$mouse2[1];
-
-      var bb = svg.node().getBoundingClientRect();
-      cfg.tooltip.move(x + bb.left, y + bb.top);
-    });
-  }
-};
-
-exports.default = ScatterPatch;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.parseConfig = parseConfig;
 exports.marginalize = marginalize;
 exports.getScale = getScale;
 
@@ -303,50 +100,6 @@ var _d = __webpack_require__(0);
 var d3 = _interopRequireWildcard(_d);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-/**
- * Parse config to setup a few general things
- */
-function parseConfig(target, data, config) {
-  var selection = d3.select(target).attr('class', 'tufte-plot');
-
-  var selectionBB = selection.node().getBoundingClientRect();
-  var selectionHeight = selectionBB.height === 0 ? 400 : selectionBB.height;
-  var selectionWidth = selectionBB.width;
-
-  if (config && config.width) {
-    selectionWidth = config.width;
-  }
-
-  // Heuristic to check whether we can make the dotline plot
-  var dotLinePlot = selectionWidth / data.length > 15;
-
-  return Object.assign({
-    height: selectionHeight,
-    width: selectionWidth,
-    margin: {
-      top: 10,
-      bottom: 10,
-      left: 10,
-      right: 20
-    },
-    dotLinePlot: dotLinePlot,
-    axisBand: {
-      x: config && config.axisLabel && config.axisLabel.x ? 50 : 30,
-      y: dotLinePlot ? 0 : config && config.axisLabel && config.axisLabel.y ? 50 : 30
-    },
-    axisMargin: 20,
-    axisLabel: {
-      x: null,
-      y: null
-    },
-    scaleType: {
-      x: 'linear',
-      y: 'linear'
-    },
-    tooltip: true
-  }, config);
-}
 
 /**
  * Return marginalized histogram data across x and y
@@ -390,6 +143,195 @@ function getScale(type, dataSeries, range) {
 }
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.YAxisPatch = exports.XAxisPatch = undefined;
+
+var _d = __webpack_require__(0);
+
+var d3 = _interopRequireWildcard(_d);
+
+var _utils = __webpack_require__(1);
+
+var utils = _interopRequireWildcard(_utils);
+
+var _annotation = __webpack_require__(9);
+
+var _annotation2 = _interopRequireDefault(_annotation);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var XAxisPatch = exports.XAxisPatch = function XAxisPatch(svg, bounds, data, cfg) {
+  _classCallCheck(this, XAxisPatch);
+
+  var xAxisDiv = svg.append('g').attr('class', 'axis axis--x').attr('transform', 'translate(0, ' + bounds.y + ')');
+
+  if (cfg.label.x) {
+    new _annotation2.default(svg, { x: bounds.x + bounds.width, y: bounds.y + 40 }, cfg.label.x); // eslint-disable-line no-new
+  }
+
+  var xScale = utils.getScale(cfg.scaleType.x, data.map(function (d) {
+    return d.x;
+  }), [bounds.x, bounds.width + bounds.x]);
+
+  var xAxis = d3.axisBottom(xScale).ticks(5);
+  xAxisDiv.transition().duration(200).call(xAxis);
+};
+
+var YAxisPatch = exports.YAxisPatch = function YAxisPatch(svg, bounds, data, cfg) {
+  _classCallCheck(this, YAxisPatch);
+
+  var yAxisDiv = svg.append('g').attr('class', 'axis axis--y').attr('transform', 'translate(' + bounds.x + ', 0)');
+
+  if (cfg.label.y) {
+    new _annotation2.default(svg, { x: 10, y: bounds.y }, cfg.label.y, { horizontal: false }); // eslint-disable-line no-new
+  }
+
+  var yScale = utils.getScale(cfg.scaleType.y, data.map(function (d) {
+    return d.y;
+  }), [bounds.y + bounds.height, bounds.y]);
+
+  var yAxis = d3.axisLeft(yScale).ticks(5);
+  yAxisDiv.transition().duration(200).call(yAxis);
+};
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _d = __webpack_require__(0);
+
+var d3 = _interopRequireWildcard(_d);
+
+var _utils = __webpack_require__(1);
+
+var utils = _interopRequireWildcard(_utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LinePatch = function LinePatch(svg, bounds, data, cfg) {
+  _classCallCheck(this, LinePatch);
+
+  var xScale = utils.getScale(cfg.scaleType.x, data.map(function (d) {
+    return d.x;
+  }), [0, bounds.width]);
+  var yScale = utils.getScale(cfg.scaleType.y, data.map(function (d) {
+    return d.y;
+  }), [bounds.height, 0]);
+
+  var line = d3.line().x(function (d) {
+    return xScale(d.x) + bounds.x;
+  }).y(function (d) {
+    return yScale(d.y) + bounds.y;
+  });
+
+  if (cfg.smoothing) {
+    line = line.curve(d3.curveBasis);
+  }
+
+  svg.append('g').append('path').attr('class', 'line').datum(data).transition().duration(200).attr('d', line);
+};
+
+exports.default = LinePatch;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _d2 = __webpack_require__(0);
+
+var d3 = _interopRequireWildcard(_d2);
+
+var _utils = __webpack_require__(1);
+
+var utils = _interopRequireWildcard(_utils);
+
+var _tooltip = __webpack_require__(5);
+
+var _tooltip2 = _interopRequireDefault(_tooltip);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ScatterPatch = function ScatterPatch(svg, bounds, data, cfg) {
+  _classCallCheck(this, ScatterPatch);
+
+  var xScale = utils.getScale(cfg.scaleType.x, data.map(function (d) {
+    return d.x;
+  }), [0, bounds.width]);
+  var yScale = utils.getScale(cfg.scaleType.y, data.map(function (d) {
+    return d.y;
+  }), [bounds.height, 0]);
+
+  var patchGroup = svg.append('g');
+
+  var circles = patchGroup.selectAll('.point').data(data);
+
+  circles.enter().append('circle').merge(circles).attr('class', 'point').transition(200).ease(d3.easeQuadOut).attr('cx', function (d) {
+    return xScale(d.x) + bounds.x;
+  }).attr('cy', function (d) {
+    return yScale(d.y) + bounds.y;
+  }).attr('r', cfg.r).attr('data-x', function (d) {
+    return d.x;
+  }).attr('data-y', function (d) {
+    return d.y;
+  });
+
+  // Add tooltip to circles
+  if (cfg.tooltip) {
+    var tooltip = new _tooltip2.default(d3.select(svg.node().parentNode));
+    patchGroup.selectAll('circle').on('mouseover', function () {
+      var elem = d3.select(this);
+      tooltip.show(parseFloat(elem.attr('data-x')).toFixed(2) + ', ' + parseFloat(elem.attr('data-y')).toFixed(2));
+    }).on('mouseout', function () {
+      return tooltip.hide();
+    }).on('mousemove', function () {
+      var _d3$mouse = d3.mouse(svg.node()),
+          _d3$mouse2 = _slicedToArray(_d3$mouse, 2),
+          x = _d3$mouse2[0],
+          y = _d3$mouse2[1];
+
+      var bb = svg.node().getBoundingClientRect();
+      tooltip.move(x + bb.left, y + bb.top);
+    });
+  }
+};
+
+exports.default = ScatterPatch;
+
+/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -402,19 +344,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _d = __webpack_require__(0);
-
-var d3 = _interopRequireWildcard(_d);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Tooltip = function () {
-  function Tooltip(target) {
+  function Tooltip(d3Selection) {
     _classCallCheck(this, Tooltip);
 
-    this.div = d3.select(target).append('div').attr('class', 'tufte-tooltip').style('display', 'none');
+    this.div = d3Selection.append('div').attr('class', 'tufte-tooltip').style('display', 'none');
     this.offset = 15;
     this.div.text('undefined');
   }
@@ -462,23 +398,19 @@ var _d = __webpack_require__(0);
 
 var d3 = _interopRequireWildcard(_d);
 
-var _utils = __webpack_require__(4);
+var _config = __webpack_require__(16);
 
-var utils = _interopRequireWildcard(_utils);
+var _config2 = _interopRequireDefault(_config);
 
-var _line = __webpack_require__(2);
+var _line = __webpack_require__(3);
 
 var _line2 = _interopRequireDefault(_line);
 
-var _scatter = __webpack_require__(3);
+var _scatter = __webpack_require__(4);
 
 var _scatter2 = _interopRequireDefault(_scatter);
 
-var _axis = __webpack_require__(1);
-
-var _tooltip = __webpack_require__(5);
-
-var _tooltip2 = _interopRequireDefault(_tooltip);
+var _axis = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -489,62 +421,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var LinePlot = function LinePlot(target, data, config) {
   _classCallCheck(this, LinePlot);
 
-  var cfg = utils.parseConfig(target, data, config);
+  var cfg = (0, _config2.default)(target, data, config);
 
   var selection = d3.select(target).attr('class', 'tufte-line-plot');
 
-  var uheight = cfg.height - cfg.margin.top - cfg.margin.bottom;
-  var uwidth = cfg.width - cfg.margin.left - cfg.margin.right;
-
   var svg = selection.append('svg').attr('width', cfg.width).attr('height', cfg.height);
 
-  // Setup layout
-  var drawingBound = {
-    height: uheight - cfg.axisBand.x - cfg.axisMargin,
-    width: uwidth - cfg.axisBand.y - cfg.axisMargin,
-    x: cfg.margin.left + cfg.axisBand.y + cfg.axisMargin,
-    y: cfg.margin.top
-  };
-
-  var xAxisBounds = {
-    height: cfg.axisBand.x,
-    width: uwidth - cfg.axisBand.y - cfg.axisMargin,
-    x: cfg.margin.left + cfg.axisBand.y + cfg.axisMargin,
-    y: cfg.margin.top + uheight - cfg.axisBand.x
-  };
-
   // Plot axes
-  new _axis.XAxisPatch(svg, xAxisBounds, data, { // eslint-disable-line no-new
-    scaleType: cfg.scaleType.x,
-    axisLabel: cfg.axisLabel.x
-  });
+  new _axis.XAxisPatch(svg, cfg.xAxisBounds, data, cfg); // eslint-disable-line no-new
   if (!cfg.dotLinePlot) {
-    var yAxisBounds = {
-      height: uheight - cfg.axisBand.x - cfg.axisMargin,
-      width: cfg.axisBand.y,
-      x: cfg.margin.left + cfg.axisBand.y,
-      y: cfg.margin.top
-    };
-    new _axis.YAxisPatch(svg, yAxisBounds, data, { // eslint-disable-line no-new
-      scaleType: cfg.scaleType.y,
-      axisLabel: cfg.axisLabel.y
-    });
+    new _axis.YAxisPatch(svg, cfg.yAxisBounds, data, cfg); // eslint-disable-line no-new
   }
 
   // Plot line
-  new _line2.default(svg, drawingBound, data, { // eslint-disable-line no-new
-    smooth: cfg.smooth,
-    scaleType: cfg.scaleType
-  });
+  new _line2.default(svg, cfg.drawingBounds, data, cfg); // eslint-disable-line no-new
 
   // Scatter points with tooltip only if data is less
   if (cfg.dotLinePlot) {
-    var tooltip = cfg.tooltip === true ? new _tooltip2.default(target) : null;
-    new _scatter2.default(svg, drawingBound, data, { // eslint-disable-line no-new
-      tooltip: tooltip,
-      r: '6px',
-      scaleType: cfg.scaleType
-    });
+    new _scatter2.default(svg, cfg.drawingBounds, data, cfg.overwrite({ tooltip: true, r: '6px' })); // eslint-disable-line no-new
   }
 };
 
@@ -567,19 +461,23 @@ var _d2 = __webpack_require__(0);
 
 var d3 = _interopRequireWildcard(_d2);
 
-var _utils = __webpack_require__(4);
+var _utils = __webpack_require__(1);
 
 var utils = _interopRequireWildcard(_utils);
 
-var _scatter = __webpack_require__(3);
+var _config = __webpack_require__(16);
+
+var _config2 = _interopRequireDefault(_config);
+
+var _scatter = __webpack_require__(4);
 
 var _scatter2 = _interopRequireDefault(_scatter);
 
-var _line = __webpack_require__(2);
+var _line = __webpack_require__(3);
 
 var _line2 = _interopRequireDefault(_line);
 
-var _axis = __webpack_require__(1);
+var _axis = __webpack_require__(2);
 
 var _tooltip = __webpack_require__(5);
 
@@ -591,82 +489,34 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var LinePlot = function LinePlot(target, data, config) {
-  _classCallCheck(this, LinePlot);
+var ScatterPlot = function ScatterPlot(target, data, config) {
+  _classCallCheck(this, ScatterPlot);
 
-  var cfg = utils.parseConfig(target, data, config);
+  var cfg = (0, _config2.default)(target, data, config);
 
   var selection = d3.select(target).attr('class', 'tufte-scatter-plot');
-
-  var uheight = cfg.height - cfg.margin.top - cfg.margin.bottom;
-  var uwidth = cfg.width - cfg.margin.left - cfg.margin.right;
 
   var svg = selection.append('svg').attr('width', cfg.width).attr('height', cfg.height);
 
   // Setup layout
-  var marginalBand = cfg.marginal ? 50 : 0;
-
-  var drawingBound = {
-    height: uheight - cfg.axisBand.x - cfg.axisMargin - marginalBand,
-    width: uwidth - cfg.axisBand.y - cfg.axisMargin - marginalBand,
-    x: cfg.margin.left + cfg.axisBand.y + cfg.axisMargin + marginalBand,
-    y: cfg.margin.top
-  };
-
-  var xAxisBounds = {
-    height: cfg.axisBand.x,
-    width: uwidth - cfg.axisBand.y - cfg.axisMargin - marginalBand,
-    x: cfg.margin.left + cfg.axisBand.y + cfg.axisMargin + marginalBand,
-    y: cfg.margin.top + uheight - cfg.axisBand.x
-  };
-
-  var yAxisBounds = {
-    height: uheight - cfg.axisBand.x - cfg.axisMargin - marginalBand,
-    width: cfg.axisBand.y,
-    x: cfg.margin.left + cfg.axisBand.y,
-    y: cfg.margin.top
-  };
-
-  if (marginalBand > 0) {
-    var xMarginalBounds = {
-      height: marginalBand,
-      width: drawingBound.width,
-      x: drawingBound.x,
-      y: cfg.margin.top + drawingBound.height + cfg.axisMargin
-    };
-
-    var yMarginalBounds = {
-      height: drawingBound.height,
-      width: marginalBand,
-      x: cfg.margin.left + cfg.axisBand.y,
-      y: cfg.margin.top
-    };
-
+  if (cfg.marginal) {
     var _utils$marginalize = utils.marginalize(data),
         _utils$marginalize2 = _slicedToArray(_utils$marginalize, 2),
         xMarginalizedData = _utils$marginalize2[0],
         yMarginalizedData = _utils$marginalize2[1];
 
-    new _line2.default(svg, xMarginalBounds, xMarginalizedData, { smooth: true, scaleType: cfg.scaleType }); // eslint-disable-line no-new
-    new _line2.default(svg, yMarginalBounds, yMarginalizedData, { smooth: true, scaleType: cfg.scaleType }); // eslint-disable-line no-new
+    new _line2.default(svg, cfg.xMarginalBounds, xMarginalizedData, cfg.overwrite({ smoothing: true })); // eslint-disable-line no-new
+    new _line2.default(svg, cfg.yMarginalBounds, yMarginalizedData, cfg.overwrite({ smoothing: true })); // eslint-disable-line no-new
   }
 
   // Plot axes
-  new _axis.XAxisPatch(svg, xAxisBounds, data, { // eslint-disable-line no-new
-    scaleType: cfg.scaleType.x,
-    axisLabel: cfg.axisLabel.x
-  });
-  new _axis.YAxisPatch(svg, yAxisBounds, data, { // eslint-disable-line no-new
-    scaleType: cfg.scaleType.y,
-    axisLabel: cfg.axisLabel.y
-  });
+  new _axis.XAxisPatch(svg, cfg.xAxisBounds, data, cfg); // eslint-disable-line no-new
+  new _axis.YAxisPatch(svg, cfg.yAxisBounds, data, cfg); // eslint-disable-line no-new
 
-  // Scatter points with tooltip only if data is less
-  var tooltip = new _tooltip2.default(target);
-  new _scatter2.default(svg, drawingBound, data, { tooltip: tooltip, scaleType: cfg.scaleType }); // eslint-disable-line no-new
+  new _scatter2.default(svg, cfg.drawingBounds, data, cfg.overwrite({ tooltip: true })); // eslint-disable-line no-new
 };
 
-exports.default = LinePlot;
+exports.default = ScatterPlot;
 
 /***/ }),
 /* 8 */
@@ -675,7 +525,7 @@ exports.default = LinePlot;
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(10);
+var content = __webpack_require__(12);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -683,7 +533,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(12)(content, options);
+var update = __webpack_require__(14)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -709,7 +559,34 @@ if(false) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ScatterPlot = exports.LinePlot = undefined;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AnnotationPatch = function AnnotationPatch(svg, bounds, text, config) {
+  _classCallCheck(this, AnnotationPatch);
+
+  var cfg = Object.assign({ horizontal: true }, config);
+
+  var textDiv = svg.append('text').attr('class', 'annotation').text(text).attr('transform', 'translate(' + bounds.x + ', ' + bounds.y + ')').style('text-anchor', 'end');
+
+  if (!cfg.horizontal) {
+    textDiv.attr('dy', '1em').attr('transform', textDiv.attr('transform') + ' rotate(-90)');
+  }
+};
+
+exports.default = AnnotationPatch;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Config = exports.ScatterPlot = exports.LinePlot = undefined;
 
 var _line = __webpack_require__(6);
 
@@ -729,15 +606,258 @@ Object.defineProperty(exports, 'ScatterPlot', {
   }
 });
 
+var _utils = __webpack_require__(1);
+
+Object.defineProperty(exports, 'Config', {
+  enumerable: true,
+  get: function get() {
+    return _utils.Config;
+  }
+});
+
 __webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(11)(undefined);
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("coelacanth", [], factory);
+	else if(typeof exports === 'object')
+		exports["coelacanth"] = factory();
+	else
+		root["coelacanth"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Merge two objects with nested data
+ */
+function mergeObject(oldObject, newObject) {
+  var oldCopy = Object.assign({}, oldObject);
+
+  function _merge(oo, no) {
+    for (var key in no) {
+      if (key in oo) {
+        // Follow structure of oo
+        if (oo[key] === Object(oo[key])) {
+          _merge(oo[key], no[key]);
+        } else if (no[key] !== Object(no[key])) {
+          oo[key] = no[key];
+        }
+      } else {
+        // Plain assign
+        oo[key] = no[key];
+      }
+    }
+    return oo;
+  }
+
+  return _merge(oldCopy, newObject);
+}
+
+/**
+ * Main config class
+ */
+
+var Coelacanth = function () {
+  function Coelacanth(defaults) {
+    var root = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+    _classCallCheck(this, Coelacanth);
+
+    this.proxy = new Proxy(this, {
+      get: function get(target, name) {
+        if (typeof target[name] === 'function') {
+          return function () {
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = arguments[_key];
+            }
+
+            return target[name].apply(this, args);
+          };
+        } else if (name in target._defaults) {
+          return target._defaults[name];
+        } else {
+          return target[name];
+        }
+      },
+      set: function set(target, name, value) {
+        target[name] = value;
+      }
+    });
+
+    // Initialize default values
+    this.root = root || this.proxy;
+    this._defaults = {};
+    for (var key in defaults) {
+      if (defaults[key] === Object(defaults[key])) {
+        this._defaults[key] = new Coelacanth(defaults[key], this.root);
+      } else {
+        this._defaults[key] = defaults[key];
+      }
+    }
+    this._derivations = {};
+
+    return this.proxy;
+  }
+
+  _createClass(Coelacanth, [{
+    key: 'derive',
+    value: function derive(name, derivation) {
+      var _this = this;
+
+      this._derivations[name] = derivation;
+
+      Object.defineProperty(this, name, {
+        get: function get() {
+          return derivation(_this.proxy, _this.root);
+        }
+      });
+    }
+  }, {
+    key: '_deriveCopy',
+    value: function _deriveCopy(object) {
+      // Apply root level derivations
+      for (var key in object._derivations) {
+        this.derive(key, object._derivations[key]);
+      }
+
+      // Apply to children
+      for (var _key2 in object._defaults) {
+        if (this._defaults[_key2] === Object(this._defaults[_key2])) {
+          this._defaults[_key2]._deriveCopy(object._defaults[_key2]);
+        }
+      }
+    }
+
+    /**
+     * Plain json getters
+     */
+
+  }, {
+    key: 'overwrite',
+    value: function overwrite(newConfig) {
+      var overwritten = new Coelacanth(mergeObject(this.defaults, newConfig));
+      // Apply derivations
+      overwritten._deriveCopy(this);
+      return overwritten;
+    }
+  }, {
+    key: 'defaults',
+    get: function get() {
+      var out = {};
+      for (var key in this._defaults) {
+        if (this._defaults[key] === Object(this._defaults[key])) {
+          out[key] = this._defaults[key].defaults;
+        } else {
+          out[key] = this._defaults[key];
+        }
+      }
+      return out;
+    }
+  }]);
+
+  return Coelacanth;
+}();
+
+exports.default = Coelacanth;
+
+/***/ })
+/******/ ]);
+});
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(13)(undefined);
 // imports
 
 
@@ -748,7 +868,7 @@ exports.push([module.i, ".axis .domain,\n.axis .tick line {\n  display: none; }\
 
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports) {
 
 /*
@@ -830,7 +950,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -867,7 +987,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(13);
+	fixUrls = __webpack_require__(15);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -1143,7 +1263,7 @@ function updateLink(linkElement, options, obj) {
 
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports) {
 
 
@@ -1238,7 +1358,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1247,22 +1367,144 @@ module.exports = function (css) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = parseConfig;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _d = __webpack_require__(0);
 
-var AnnotationPatch = function AnnotationPatch(svg, bounds, text, config) {
-  _classCallCheck(this, AnnotationPatch);
+var d3 = _interopRequireWildcard(_d);
 
-  var cfg = Object.assign({ horizontal: true }, config);
+var _coelacanth = __webpack_require__(11);
 
-  var textDiv = svg.append('text').attr('class', 'annotation').text(text).attr('transform', 'translate(' + bounds.x + ', ' + bounds.y + ')').style('text-anchor', 'end');
+var _coelacanth2 = _interopRequireDefault(_coelacanth);
 
-  if (!cfg.horizontal) {
-    textDiv.attr('dy', '1em').attr('transform', textDiv.attr('transform') + ' rotate(-90)');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+/**
+ * Parse config to setup a few general things
+ */
+function parseConfig(target, data, config) {
+  var selection = d3.select(target).attr('class', 'tufte-plot');
+
+  var selectionBB = selection.node().getBoundingClientRect();
+  var selectionHeight = Math.max(selectionBB.height, 400);
+  var selectionWidth = selectionBB.width;
+
+  // Setup defaults
+  var defaults = {
+    height: selectionHeight,
+    width: selectionWidth,
+    margin: {
+      top: 10,
+      bottom: 10,
+      left: 10,
+      right: 20,
+      axis: 20 // Gap between axis and drawing bound
+    },
+    dotLinePlot: true, // Weather to add scatter points to line patch
+    band: {}, // Bands for axis, marginal plots etc.
+    label: {
+      x: null,
+      y: null
+    },
+    scaleType: {
+      x: 'linear',
+      y: 'linear'
+    },
+    tickType: { // Type of ticks display (plain or quartile)
+      x: 'plain',
+      y: 'plain'
+    },
+    tooltip: true,
+    smoothing: false, // To use smoothing in line patch
+    marginal: false,
+    r: '2px'
+  };
+
+  // Manual overrides
+  // Heuristic to check whether we can make the dotline plot
+  defaults.dotLinePlot = selectionWidth / data.length > 15;
+
+  if (config) {
+    if (config.label && config.label.x) {
+      defaults.band.x = 50;
+    }
   }
-};
 
-exports.default = AnnotationPatch;
+  var cconfig = new _coelacanth2.default(defaults);
+
+  // Derivations
+  cconfig.derive('uheight', function (node) {
+    return node.height - node.margin.top - node.margin.bottom;
+  });
+  cconfig.derive('uwidth', function (node) {
+    return node.width - node.margin.left - node.margin.right;
+  });
+
+  // Marginal plot band
+  cconfig.band.derive('marginal', function (node, root) {
+    return root.marginal ? 50 : 0;
+  });
+
+  // Axis bands
+  cconfig.band.derive('x', function (node, root) {
+    return root.label.x ? 50 : 30;
+  });
+  cconfig.band.derive('y', function (node, root) {
+    return root.dotLinePlot ? 0 : root.label.y ? 50 : 30;
+  });
+
+  // Bounds for drawing stuff
+  cconfig.derive('drawingBounds', function (node) {
+    return {
+      height: node.uheight - node.band.x - node.margin.axis - node.band.marginal,
+      width: node.uwidth - node.band.y - node.margin.axis - node.band.marginal,
+      x: node.margin.left + node.band.y + node.margin.axis + node.band.marginal,
+      y: node.margin.top
+    };
+  });
+
+  // Bounds for axes
+  cconfig.derive('xAxisBounds', function (node) {
+    return {
+      height: node.band.x,
+      width: node.drawingBounds.width,
+      x: node.drawingBounds.x,
+      y: node.margin.top + node.uheight - node.band.x
+    };
+  });
+
+  cconfig.derive('yAxisBounds', function (node) {
+    return {
+      height: node.drawingBounds.height,
+      width: node.band.y,
+      x: node.margin.left + node.band.y,
+      y: node.margin.top
+    };
+  });
+
+  // Bounds for marginal
+  cconfig.derive('xMarginalBounds', function (node) {
+    return {
+      height: node.band.marginal,
+      width: node.drawingBounds.width,
+      x: node.drawingBounds.x,
+      y: node.margin.top + node.drawingBounds.height + node.margin.axis
+    };
+  });
+
+  cconfig.derive('yMarginalBounds', function (node) {
+    return {
+      height: node.drawingBounds.height,
+      width: node.band.marginal,
+      x: node.margin.left + node.band.y,
+      y: node.margin.top
+    };
+  });
+
+  return cconfig.overwrite(config);
+}
 
 /***/ })
 /******/ ]);

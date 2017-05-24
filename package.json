@@ -31,6 +31,7 @@
     "webpack-dev-server": "^2.4.5"
   },
   "dependencies": {
+    "coelacanth": "^0.2.2",
     "d3": "^4.9.1"
   }
 }

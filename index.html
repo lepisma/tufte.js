@@ -110,17 +110,17 @@
      // Same line plot but with much more points
      new tufte.LinePlot('#line-plot-more-points', [...Array(200).keys()].map(d => {
        return {x: d, y: pgen.next().value}
-     }), { smooth: true })
+     }), { smoothing: true })
 
      // Simple scatter plot
      new tufte.ScatterPlot('#scatter-plot', [...Array(200).keys()].map(d => {
        return {x: pgen.next().value, y: pgen2.next().value }
-     }), { axisLabel: {x: 'Also randoms', y: 'Randoms' }, marginal: false })
+     }), { label: {x: 'Also randoms', y: 'Randoms' }, marginal: false })
 
        // Scatter plot with marginal
        new tufte.ScatterPlot('#scatter-plot-with-marginal', [...Array(200).keys()].map(d => {
          return {x: pgen.next().value, y: pgen2.next().value}
-       }))
+       }), { marginal: true })
     </script>
   </body>
 </html>

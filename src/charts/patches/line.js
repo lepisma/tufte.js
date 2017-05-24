@@ -2,15 +2,7 @@ import * as d3 from 'd3'
 import * as utils from '../utils'
 
 export default class LinePatch {
-  constructor (svg, bounds, data, config) {
-    let cfg = Object.assign({
-      smooth: false,
-      scaleType: {
-        x: 'linear',
-        y: 'linear'
-      }
-    }, config)
-
+  constructor (svg, bounds, data, cfg) {
     let xScale = utils.getScale(
       cfg.scaleType.x,
       data.map(d => d.x),
@@ -26,7 +18,7 @@ export default class LinePatch {
         .x(d => xScale(d.x) + bounds.x)
         .y(d => yScale(d.y) + bounds.y)
 
-    if (cfg.smooth) {
+    if (cfg.smoothing) {
       line = line.curve(d3.curveBasis)
     }
 

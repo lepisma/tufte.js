@@ -1,53 +1,6 @@
 import * as d3 from 'd3'
 
 /**
- * Parse config to setup a few general things
- */
-export function parseConfig (target, data, config) {
-  let selection = d3.select(target)
-      .attr('class', 'tufte-plot')
-
-  let selectionBB = selection.node().getBoundingClientRect()
-  let selectionHeight = (selectionBB.height === 0 ? 400 : selectionBB.height)
-  let selectionWidth = selectionBB.width
-
-  if (config && config.width) {
-    selectionWidth = config.width
-  }
-
-  // Heuristic to check whether we can make the dotline plot
-  let dotLinePlot = selectionWidth / data.length > 15
-
-  return Object.assign({
-    height: selectionHeight,
-    width: selectionWidth,
-    margin: {
-      top: 10,
-      bottom: 10,
-      left: 10,
-      right: 20
-    },
-    dotLinePlot: dotLinePlot,
-    axisBand: {
-      x: (config && config.axisLabel && config.axisLabel.x) ? 50 : 30,
-      y: dotLinePlot ? 0 : (config && config.axisLabel && config.axisLabel.y) ? 50 : 30
-    },
-    axisMargin: 20,
-    axisLabel: {
-      x: null,
-      y: null
-    },
-    scaleType: {
-      x: 'linear',
-      y: 'linear'
-    },
-    tooltip: true,
-    smoothing: true,
-    marginal: true
-  }, config)
-}
-
-/**
  * Return marginalized histogram data across x and y
  */
 export function marginalize (data) {

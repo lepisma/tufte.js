@@ -990,6 +990,10 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
+coelacanth@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/coelacanth/-/coelacanth-0.2.2.tgz#520eb7159c013457c445c2469c055c0c83cab997"
+
 color-convert@^1.3.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.0.tgz#1accf97dd739b983bf994d56fec8f95853641b7a"

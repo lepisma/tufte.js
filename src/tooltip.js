@@ -1,8 +1,6 @@
-import * as d3 from 'd3'
-
 export default class Tooltip {
-  constructor (target) {
-    this.div = d3.select(target).append('div')
+  constructor (d3Selection) {
+    this.div = d3Selection.append('div')
       .attr('class', 'tufte-tooltip')
       .style('display', 'none')
     this.offset = 15

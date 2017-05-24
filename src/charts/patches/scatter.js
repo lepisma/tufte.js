@@ -1,16 +1,9 @@
 import * as d3 from 'd3'
 import * as utils from '../utils'
+import Tooltip from '../../tooltip'
 
 export default class ScatterPatch {
-  constructor (svg, bounds, data, config) {
-    let cfg = Object.assign({
-      r: '2px',
-      scaleType: {
-        x: 'linear',
-        y: 'linear'
-      }
-    }, config)
-
+  constructor (svg, bounds, data, cfg) {
     let xScale = utils.getScale(
       cfg.scaleType.x,
       data.map(d => d.x),
@@ -40,16 +33,17 @@ export default class ScatterPatch {
 
     // Add tooltip to circles
     if (cfg.tooltip) {
+      let tooltip = new Tooltip(d3.select(svg.node().parentNode))
       patchGroup.selectAll('circle')
         .on('mouseover', function () {
           let elem = d3.select(this)
-          cfg.tooltip.show(`${parseFloat(elem.attr('data-x')).toFixed(2)}, ${parseFloat(elem.attr('data-y')).toFixed(2)}`)
+          tooltip.show(`${parseFloat(elem.attr('data-x')).toFixed(2)}, ${parseFloat(elem.attr('data-y')).toFixed(2)}`)
         })
-        .on('mouseout', () => cfg.tooltip.hide())
+        .on('mouseout', () => tooltip.hide())
         .on('mousemove', () => {
           let [x, y] = d3.mouse(svg.node())
           let bb = svg.node().getBoundingClientRect()
-          cfg.tooltip.move(x + bb.left, y + bb.top)
+          tooltip.move(x + bb.left, y + bb.top)
         })
     }
   }
