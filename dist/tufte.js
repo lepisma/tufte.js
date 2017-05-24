@@ -141,7 +141,8 @@ function marginalize(data) {
 function getScale(type, dataSeries, range) {
   return {
     'linear': d3.scaleLinear,
-    'log': d3.scaleLog
+    'log': d3.scaleLog,
+    'time': d3.scaleTime
   }[type]().domain(d3.extent(dataSeries)).range(range);
 }
 
@@ -215,7 +216,14 @@ var XAxisPatch = exports.XAxisPatch = function XAxisPatch(svg, bounds, dataSerie
 
   var xScale = utils.getScale(cfg.scaleType.x, dataSeries, [bounds.x, bounds.width + bounds.x]);
 
-  var xAxis = d3.axisBottom(xScale).tickValues(utils.getTicks(cfg.tickType.x, dataSeries));
+  var xAxis = d3.axisBottom(xScale);
+
+  if (cfg.scaleType.x === 'time') {
+    xAxis.ticks(5);
+  } else {
+    xAxis.tickValues(utils.getTicks(cfg.tickType.x, dataSeries));
+  }
+
   xAxisDiv.transition().duration(200).call(xAxis);
 };
 
@@ -230,7 +238,14 @@ var YAxisPatch = exports.YAxisPatch = function YAxisPatch(svg, bounds, dataSerie
 
   var yScale = utils.getScale(cfg.scaleType.y, dataSeries, [bounds.y + bounds.height, bounds.y]);
 
-  var yAxis = d3.axisLeft(yScale).tickValues(utils.getTicks(cfg.tickType.y, dataSeries));
+  var yAxis = d3.axisLeft(yScale);
+
+  if (cfg.scaleType.y === 'time') {
+    yAxis.ticks(5);
+  } else {
+    yAxis.tickValues(utils.getTicks(cfg.tickType.y, dataSeries));
+  }
+
   yAxisDiv.transition().duration(200).call(yAxis);
 };
 
@@ -303,7 +318,7 @@ var _utils = __webpack_require__(1);
 
 var utils = _interopRequireWildcard(_utils);
 
-var _tooltip = __webpack_require__(5);
+var _tooltip = __webpack_require__(11);
 
 var _tooltip2 = _interopRequireDefault(_tooltip);
 
@@ -369,47 +384,144 @@ exports.default = ScatterPatch;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = parseConfig;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _d = __webpack_require__(0);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var d3 = _interopRequireWildcard(_d);
 
-var Tooltip = function () {
-  function Tooltip(d3Selection) {
-    _classCallCheck(this, Tooltip);
+var _coelacanth = __webpack_require__(12);
 
-    this.div = d3Selection.append('div').attr('class', 'tufte-tooltip').style('display', 'none');
-    this.offset = 15;
-    this.div.text('undefined');
+var _coelacanth2 = _interopRequireDefault(_coelacanth);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+/**
+ * Parse config to setup a few general things
+ */
+function parseConfig(target, data, config) {
+  var selection = d3.select(target).attr('class', 'tufte-plot');
+
+  var selectionBB = selection.node().getBoundingClientRect();
+  var selectionHeight = Math.max(selectionBB.height, 400);
+  var selectionWidth = selectionBB.width;
+
+  // Setup defaults
+  var defaults = {
+    height: selectionHeight,
+    width: selectionWidth,
+    margin: {
+      top: 10,
+      bottom: 10,
+      left: 10,
+      right: 20,
+      axis: 20 // Gap between axis and drawing bound
+    },
+    dotLinePlot: true, // Weather to add scatter points to line patch
+    band: {}, // Bands for axis, marginal plots etc.
+    label: {
+      x: null,
+      y: null
+    },
+    scaleType: {
+      x: 'linear',
+      y: 'linear'
+    },
+    tickType: { // Type of ticks display (plain or quartile)
+      x: 'plain',
+      y: 'plain'
+    },
+    tooltip: true,
+    smoothing: false, // To use smoothing in line patch
+    marginal: false,
+    r: '2px'
+  };
+
+  // Manual overrides
+  // Heuristic to check whether we can make the dotline plot
+  defaults.dotLinePlot = selectionWidth / data.length > 15;
+
+  if (config) {
+    if (config.label && config.label.x) {
+      defaults.band.x = 50;
+    }
   }
 
-  _createClass(Tooltip, [{
-    key: 'show',
-    value: function show(data) {
-      this.div.text(data);
-      this.div.style('display', null);
-    }
-  }, {
-    key: 'hide',
-    value: function hide() {
-      this.div.style('display', 'none');
-    }
-  }, {
-    key: 'move',
-    value: function move(x, y) {
-      this.div.style('top', y + this.offset + 'px').style('left', x + this.offset + 'px');
-    }
-  }, {
-    key: 'width',
-    get: function get() {
-      return Math.max(this.selection.node().getBoundingClientRect().width, 50);
-    }
-  }]);
+  var cconfig = new _coelacanth2.default(defaults);
 
-  return Tooltip;
-}();
+  // Derivations
+  cconfig.derive('uheight', function (node) {
+    return node.height - node.margin.top - node.margin.bottom;
+  });
+  cconfig.derive('uwidth', function (node) {
+    return node.width - node.margin.left - node.margin.right;
+  });
 
-exports.default = Tooltip;
+  // Marginal plot band
+  cconfig.band.derive('marginal', function (node, root) {
+    return root.marginal ? 50 : 0;
+  });
+
+  // Axis bands
+  cconfig.band.derive('x', function (node, root) {
+    return root.label.x ? 50 : 30;
+  });
+  cconfig.band.derive('y', function (node, root) {
+    return root.dotLinePlot ? 0 : root.label.y ? 50 : 30;
+  });
+
+  // Bounds for drawing stuff
+  cconfig.derive('drawingBounds', function (node) {
+    return {
+      height: node.uheight - node.band.x - node.margin.axis - node.band.marginal,
+      width: node.uwidth - node.band.y - node.margin.axis - node.band.marginal,
+      x: node.margin.left + node.band.y + node.margin.axis + node.band.marginal,
+      y: node.margin.top
+    };
+  });
+
+  // Bounds for axes
+  cconfig.derive('xAxisBounds', function (node) {
+    return {
+      height: node.band.x,
+      width: node.drawingBounds.width,
+      x: node.drawingBounds.x,
+      y: node.margin.top + node.uheight - node.band.x
+    };
+  });
+
+  cconfig.derive('yAxisBounds', function (node) {
+    return {
+      height: node.drawingBounds.height,
+      width: node.band.y,
+      x: node.margin.left + node.band.y,
+      y: node.margin.top
+    };
+  });
+
+  // Bounds for marginal
+  cconfig.derive('xMarginalBounds', function (node) {
+    return {
+      height: node.band.marginal,
+      width: node.drawingBounds.width,
+      x: node.drawingBounds.x,
+      y: node.margin.top + node.drawingBounds.height + node.margin.axis
+    };
+  });
+
+  cconfig.derive('yMarginalBounds', function (node) {
+    return {
+      height: node.drawingBounds.height,
+      width: node.band.marginal,
+      x: node.margin.left + node.band.y,
+      y: node.margin.top
+    };
+  });
+
+  return cconfig.overwrite(config);
+}
 
 /***/ }),
 /* 6 */
@@ -426,7 +538,7 @@ var _d = __webpack_require__(0);
 
 var d3 = _interopRequireWildcard(_d);
 
-var _config = __webpack_require__(17);
+var _config = __webpack_require__(5);
 
 var _config2 = _interopRequireDefault(_config);
 
@@ -497,7 +609,7 @@ var _utils = __webpack_require__(1);
 
 var utils = _interopRequireWildcard(_utils);
 
-var _config = __webpack_require__(17);
+var _config = __webpack_require__(5);
 
 var _config2 = _interopRequireDefault(_config);
 
@@ -557,7 +669,7 @@ exports.default = ScatterPlot;
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(12);
+var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -565,7 +677,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(14)(content, options);
+var update = __webpack_require__(15)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -644,6 +756,58 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /***/ }),
 /* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Tooltip = function () {
+  function Tooltip(d3Selection) {
+    _classCallCheck(this, Tooltip);
+
+    this.div = d3Selection.append('div').attr('class', 'tufte-tooltip').style('display', 'none');
+    this.offset = 15;
+    this.div.text('undefined');
+  }
+
+  _createClass(Tooltip, [{
+    key: 'show',
+    value: function show(data) {
+      this.div.text(data);
+      this.div.style('display', null);
+    }
+  }, {
+    key: 'hide',
+    value: function hide() {
+      this.div.style('display', 'none');
+    }
+  }, {
+    key: 'move',
+    value: function move(x, y) {
+      this.div.style('top', y + this.offset + 'px').style('left', x + this.offset + 'px');
+    }
+  }, {
+    key: 'width',
+    get: function get() {
+      return Math.max(this.selection.node().getBoundingClientRect().width, 50);
+    }
+  }]);
+
+  return Tooltip;
+}();
+
+exports.default = Tooltip;
+
+/***/ }),
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -877,21 +1041,21 @@ exports.default = Coelacanth;
 });
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(13)(undefined);
+exports = module.exports = __webpack_require__(14)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".axis .domain,\n.axis .tick line {\n  display: none; }\n\n.tufte-plot,\ntufte-tooltip {\n  font-family: et-book, Palatino, \"Palatino Linotype\", \"Palatino LT STD\", \"Book Antiqua\", Georgia, serif; }\n\n.tufte-tooltip {\n  background: #31363b;\n  border-color: #31363b;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: 1px;\n  box-shadow: 8px 8px 20px 0 #aaa;\n  color: #fff;\n  font-family: 'Source Sans Pro';\n  font-size: 13px;\n  padding: 3px 10px;\n  position: fixed; }\n\n.tufte-line-plot .line {\n  fill: none;\n  stroke: #000; }\n\n.tufte-line-plot .point {\n  fill: #000;\n  stroke: #fff;\n  stroke-width: 6px; }\n\n.tufte-scatter-plot .point {\n  fill: #000;\n  stroke: transparent;\n  stroke-width: 5px; }\n\n.tufte-scatter-plot .line {\n  fill: none;\n  stroke: #aaa; }\n", ""]);
+exports.push([module.i, ".axis .domain,\n.axis .tick line {\n  display: none; }\n\n.tufte-plot,\ntufte-tooltip,\n.annotation {\n  font-family: et-book, Palatino, \"Palatino Linotype\", \"Palatino LT STD\", \"Book Antiqua\", Georgia, serif; }\n\n.annotation {\n  font-size: 12px; }\n\n.tufte-tooltip {\n  background: #31363b;\n  border-color: #31363b;\n  border-radius: 2px;\n  border-style: solid;\n  border-width: 1px;\n  box-shadow: 8px 8px 20px 0 #aaa;\n  color: #fff;\n  font-family: 'Source Sans Pro';\n  font-size: 13px;\n  padding: 3px 10px;\n  position: fixed; }\n\n.tufte-line-plot .line {\n  fill: none;\n  stroke: #000; }\n\n.tufte-line-plot .point {\n  fill: #000;\n  stroke: #fff;\n  stroke-width: 6px; }\n\n.tufte-scatter-plot .point {\n  fill: #000;\n  stroke: transparent;\n  stroke-width: 5px; }\n\n.tufte-scatter-plot .line {\n  fill: none;\n  stroke: #aaa; }\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 /*
@@ -973,7 +1137,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -1010,7 +1174,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(15);
+	fixUrls = __webpack_require__(16);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -1286,7 +1450,7 @@ function updateLink(linkElement, options, obj) {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 
@@ -1379,156 +1543,6 @@ module.exports = function (css) {
 	return fixedCss;
 };
 
-
-/***/ }),
-/* 16 */,
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = parseConfig;
-
-var _d = __webpack_require__(0);
-
-var d3 = _interopRequireWildcard(_d);
-
-var _coelacanth = __webpack_require__(11);
-
-var _coelacanth2 = _interopRequireDefault(_coelacanth);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-/**
- * Parse config to setup a few general things
- */
-function parseConfig(target, data, config) {
-  var selection = d3.select(target).attr('class', 'tufte-plot');
-
-  var selectionBB = selection.node().getBoundingClientRect();
-  var selectionHeight = Math.max(selectionBB.height, 400);
-  var selectionWidth = selectionBB.width;
-
-  // Setup defaults
-  var defaults = {
-    height: selectionHeight,
-    width: selectionWidth,
-    margin: {
-      top: 10,
-      bottom: 10,
-      left: 10,
-      right: 20,
-      axis: 20 // Gap between axis and drawing bound
-    },
-    dotLinePlot: true, // Weather to add scatter points to line patch
-    band: {}, // Bands for axis, marginal plots etc.
-    label: {
-      x: null,
-      y: null
-    },
-    scaleType: {
-      x: 'linear',
-      y: 'linear'
-    },
-    tickType: { // Type of ticks display (plain or quartile)
-      x: 'plain',
-      y: 'plain'
-    },
-    tooltip: true,
-    smoothing: false, // To use smoothing in line patch
-    marginal: false,
-    r: '2px'
-  };
-
-  // Manual overrides
-  // Heuristic to check whether we can make the dotline plot
-  defaults.dotLinePlot = selectionWidth / data.length > 15;
-
-  if (config) {
-    if (config.label && config.label.x) {
-      defaults.band.x = 50;
-    }
-  }
-
-  var cconfig = new _coelacanth2.default(defaults);
-
-  // Derivations
-  cconfig.derive('uheight', function (node) {
-    return node.height - node.margin.top - node.margin.bottom;
-  });
-  cconfig.derive('uwidth', function (node) {
-    return node.width - node.margin.left - node.margin.right;
-  });
-
-  // Marginal plot band
-  cconfig.band.derive('marginal', function (node, root) {
-    return root.marginal ? 50 : 0;
-  });
-
-  // Axis bands
-  cconfig.band.derive('x', function (node, root) {
-    return root.label.x ? 50 : 30;
-  });
-  cconfig.band.derive('y', function (node, root) {
-    return root.dotLinePlot ? 0 : root.label.y ? 50 : 30;
-  });
-
-  // Bounds for drawing stuff
-  cconfig.derive('drawingBounds', function (node) {
-    return {
-      height: node.uheight - node.band.x - node.margin.axis - node.band.marginal,
-      width: node.uwidth - node.band.y - node.margin.axis - node.band.marginal,
-      x: node.margin.left + node.band.y + node.margin.axis + node.band.marginal,
-      y: node.margin.top
-    };
-  });
-
-  // Bounds for axes
-  cconfig.derive('xAxisBounds', function (node) {
-    return {
-      height: node.band.x,
-      width: node.drawingBounds.width,
-      x: node.drawingBounds.x,
-      y: node.margin.top + node.uheight - node.band.x
-    };
-  });
-
-  cconfig.derive('yAxisBounds', function (node) {
-    return {
-      height: node.drawingBounds.height,
-      width: node.band.y,
-      x: node.margin.left + node.band.y,
-      y: node.margin.top
-    };
-  });
-
-  // Bounds for marginal
-  cconfig.derive('xMarginalBounds', function (node) {
-    return {
-      height: node.band.marginal,
-      width: node.drawingBounds.width,
-      x: node.drawingBounds.x,
-      y: node.margin.top + node.drawingBounds.height + node.margin.axis
-    };
-  });
-
-  cconfig.derive('yMarginalBounds', function (node) {
-    return {
-      height: node.drawingBounds.height,
-      width: node.band.marginal,
-      x: node.margin.left + node.band.y,
-      y: node.margin.top
-    };
-  });
-
-  return cconfig.overwrite(config);
-}
 
 /***/ })
 /******/ ]);
