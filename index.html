@@ -16,22 +16,19 @@
       </p>
 
       <p>
-        The key idea is to create an ultra minimal library for simple clutter-free
+        The idea is to create an ultra minimal library for simple
         visualizations. At places, I have relied on the possibility of
         interactiveness to deviate from the <em>usual</em> Tufte style which helps in
-        removing more <em>ink</em>. In case some of the <em>required</em> data
-        ink is missing, its because either they are in plan or I have actually
-        missed them (because of my narrow use case) or they are better suited to
-        a visualization apt for <em>small data</em>, like a table.
+        removing more <em>ink</em>. In case some of the <em>required</em> data ink
+        is missing, its because either they are in plan or I have actually
+        missed them or they are better suited to a visualization apt for
+        <em>small data</em>, like a table.
       </p>
 
       <p>
         <em>
-          tufte.js is under development and there are many
-          <a href="https://github.com/lepisma/tufte.js/issues">issues</a> to
-          be solved before it is really ready for use. This project is not
-          associated with Edward Tufte and is purely an opinionated take on his
-          visual style.
+          This project is not associated with Edward Tufte and is purely an
+          opinionated take on his visual style.
         </em>
       </p>
 
@@ -40,50 +37,129 @@
 
         <p>
           <code>tufte.js</code> is a <a href="https://d3js.org/">D3</a> based
-          library. To use it, download the source and include the following
-          snippet in your html document.
+          library. To use it, download the source
+          <a href="https://github.com/lepisma/tufte.js">from here</a> and include
+          the following snippet in your html document. Its also available on npm
+          <a href="https://www.npmjs.com/package/tufte">here</a>.
         </p>
 
         <pre class="code">&lt;script src="https://d3js.org/d3.v4.min.js">&lt;/script>
 &lt;script type="text/javascript" src="./dist/tufte.js">&lt;script></pre>
 
-        <p>TODO:<em>documentation</em></p>
+        <p>
+          The API is simple and most of the charts need 3 arguments, in the
+          following order:
+          <ul>
+            <li><em>target</em><br>CSS selector of the target div, e.g. <code>'#plotTarget'</code></li>
+            <li><em>data</em><br>Numerical data in the following form (unless noted otherwise),
+              <code>[{x: 1, y: 3.4}, {x: 2.3, y: 13} ...]</code></li>
+            <li><em>config [optional]</em><br>Optional configuration, explained in
+            examples and in the end.</li>
+          </ul>
+        </p>
       </section>
 
       <section>
         <h2>Line plot</h2>
-        <br>
-        <br>
-        <br>
+        <p>
+          A basic line chart can be plotted using the following snippet
+        </p>
+        <pre class="code">new tufte.LinePlot('#target-div', data)</pre>
+
+        <p>
+          In case of less data points, the <em>y-axis</em> is skipped and
+          circles with on hover tooltip are displayed for plotted points.
+        </p>
+
         <figure>
-          <span class="marginnote">A simple line plot with on hover tooltips for points</span>
+          <label for="mn-line-plot" class="margin-toggle">&#8853;</label>
+          <input type="checkbox" id="mn-line-plot" class="margin-toggle"/>
+          <span class="marginnote">
+            A simple line plot with on hover tooltips for points. This uses
+            extra config parameter <code>{label: {x: 'text'}}</code> for setting
+            the x axis label.
+          </span>
           <div id="line-plot"></div>
         </figure>
-        <br>
-        <br>
-        <br>
+        <p>
+          When there are lots of points, the circles are not drawn and y axis is
+          displayed.
+        </p>
+
         <figure>
-          <span class="marginnote">Line plot with lots of points is clearer without circles</span>
+          <label for="mn-line-plot-more" class="margin-toggle">&#8853;</label>
+          <input type="checkbox" id="mn-line-plot-more" class="margin-toggle"/>
+          <span class="marginnote">
+            Optional parameter <code>{smoothing: true}</code> is set by default in
+            this case.
+          </span>
           <div id="line-plot-more-points"></div>
         </figure>
       </section>
 
       <section>
         <h2>Scatter plot</h2>
-        <br>
-        <br>
-        <br>
+        <p>
+          Scatter plot has similar API
+        </p>
+        <pre class="code">new tufte.ScatterPlot('#target-div', data)</pre>
+
         <figure>
-          <span class="marginnote">Basic scatter plot with hover tooltips</span>
+          <label for="mn-line-scatter-plot" class="margin-toggle">&#8853;</label>
+          <input type="checkbox" id="mn-line-scatter-plot" class="margin-toggle"/>
+          <span class="marginnote">
+            Optional parameter <code>{tickType: {x: 'quartile', y: 'quartile'}}</code>
+            provides quartile tick labels on both axes here.
+          </span>
           <div id="scatter-plot"></div>
         </figure>
-        <br>
-        <br>
-        <br>
+        <p>
+          A more useful way to plot scatter is to set <code>marginal = true</code> in
+          config. This plots the marginal values along the axes ticks.
+        </p>
+
         <figure>
-          <span class="marginnote">Marginal values are shown along side the axes for scatter plot</span>
+          <label for="mn-line-scatter-plot-marginal" class="margin-toggle">&#8853;</label>
+          <input type="checkbox" id="mn-line-scatter-plot-marginal" class="margin-toggle"/>
+          <span class="marginnote">
+            Optional parameter <code>{marginal: true}</code> is set here.
+          </span>
           <div id="scatter-plot-with-marginal"></div>
         </figure>
+      </section>
+
+      <section>
+        <h2>Chart Options</h2>
+        <p>
+          Optional parameters specified below can be overridden by passing to
+          the plot constructor.
+        </p>
+        <dl>
+          <dt><code>width</code>, <code>height (integer)</code></dt>
+          <dd>Width and height for the plot.</dd>
+          <br>
+          <dt><code>margin.[top|bottom|left|right|axis] (integer)</code></dt>
+          <dd>Margins. The <code>axis</code> margin is between drawing area and
+            axis</dd>
+          <br>
+          <dt><code>dotLinePlot (boolean)</code></dt>
+          <dd>Whether to draw circles on line plot</dd>
+          <br>
+          <dt><code>label.[x|y] (string)</code></dt>
+          <dd>Label for the axis</dd>
+          <br>
+          <dt><code>scaleType.[x|y] (string)</code></dt>
+          <dd>Scale type for axis. <code>"linear"</code> (default) or
+            <code>"log"</code></dd>
+          <br>
+          <dt><code>tickType.[x|y] (string)</code></dt>
+          <dd>Type of ticks to show. <code>"plain"</code> (default) or
+            <code>"quartile"</code></dd>
+          <br>
+          <dt><code>marginal (boolean)</code></dt>
+          <dd>Whether to show marginal values in scatter plots. False
+            by default.</dd>
+        </dl>
       </section>
     </article>
 
@@ -104,23 +180,23 @@
 
      // Plain ol' chart with lesser number of points
      new tufte.LinePlot('#line-plot', [...Array(10).keys()].map(d => {
-       return {x: d, y: pgen.next().value}
-     }))
+       return { x: d, y: pgen.next().value }
+     }), { label: { x: 'Number vs random number' }})
 
      // Same line plot but with much more points
      new tufte.LinePlot('#line-plot-more-points', [...Array(200).keys()].map(d => {
-       return {x: d, y: pgen.next().value}
+       return { x: d, y: pgen.next().value }
      }), { smoothing: true })
 
      // Simple scatter plot
      new tufte.ScatterPlot('#scatter-plot', [...Array(200).keys()].map(d => {
-       return {x: pgen.next().value, y: pgen2.next().value }
-     }), { label: {x: 'Also randoms', y: 'Randoms' }, marginal: false })
+       return { x: pgen.next().value, y: pgen2.next().value }
+     }), { label: { x: 'Also randoms', y: 'Randoms' }, tickType: { x: 'quartile', y: 'quartile' }})
 
-       // Scatter plot with marginal
-       new tufte.ScatterPlot('#scatter-plot-with-marginal', [...Array(200).keys()].map(d => {
-         return {x: pgen.next().value, y: pgen2.next().value}
-       }), { marginal: true, tickType: { x: 'quartile', y: 'quartile' } })
+     // Scatter plot with marginal
+     new tufte.ScatterPlot('#scatter-plot-with-marginal', [...Array(200).keys()].map(d => {
+       return { x: pgen.next().value, y: pgen2.next().value }
+     }), { marginal: true, tickType: { x: 'quartile', y: 'quartile' }})
     </script>
   </body>
 </html>
