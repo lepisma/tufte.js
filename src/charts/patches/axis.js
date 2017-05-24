@@ -18,7 +18,14 @@ export class XAxisPatch {
       [bounds.x, bounds.width + bounds.x]
     )
 
-    let xAxis = d3.axisBottom(xScale).tickValues(utils.getTicks(cfg.tickType.x, dataSeries))
+    let xAxis = d3.axisBottom(xScale)
+
+    if (cfg.scaleType.x === 'time') {
+      xAxis.ticks(5)
+    } else {
+      xAxis.tickValues(utils.getTicks(cfg.tickType.x, dataSeries))
+    }
+
     xAxisDiv.transition().duration(200).call(xAxis)
   }
 }
@@ -39,7 +46,14 @@ export class YAxisPatch {
       [bounds.y + bounds.height, bounds.y]
     )
 
-    let yAxis = d3.axisLeft(yScale).tickValues(utils.getTicks(cfg.tickType.y, dataSeries))
+    let yAxis = d3.axisLeft(yScale)
+
+    if (cfg.scaleType.y === 'time') {
+      yAxis.ticks(5)
+    } else {
+      yAxis.tickValues(utils.getTicks(cfg.tickType.y, dataSeries))
+    }
+
     yAxisDiv.transition().duration(200).call(yAxis)
   }
 }

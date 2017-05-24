@@ -32,7 +32,8 @@ export function marginalize (data) {
 export function getScale (type, dataSeries, range) {
   return {
     'linear': d3.scaleLinear,
-    'log': d3.scaleLog
+    'log': d3.scaleLog,
+    'time': d3.scaleTime
   }[type]()
       .domain(d3.extent(dataSeries))
       .range(range)
