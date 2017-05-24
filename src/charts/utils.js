@@ -37,3 +37,26 @@ export function getScale (type, dataSeries, range) {
       .domain(d3.extent(dataSeries))
       .range(range)
 }
+
+/**
+ * Get ticks depending on the type
+ */
+export function getTicks (type, dataSeries) {
+  if (type === 'plain') {
+    let min = Math.min(...dataSeries)
+    let max = Math.max(...dataSeries)
+    let d3Ticks = d3.ticks(min, max, 5)
+
+    if (d3Ticks.indexOf(min) === -1) {
+      d3Ticks.splice(0, 1, min)
+    }
+
+    if (d3Ticks.indexOf(max) === -1) {
+      d3Ticks.splice(d3Ticks.length - 1, 1, max)
+    }
+
+    return d3Ticks
+  } else {
+    return 5
+  }
+}

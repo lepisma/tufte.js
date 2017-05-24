@@ -3,7 +3,7 @@ import * as utils from '../utils'
 import AnnotationPatch from './annotation'
 
 export class XAxisPatch {
-  constructor (svg, bounds, data, cfg) {
+  constructor (svg, bounds, dataSeries, cfg) {
     let xAxisDiv = svg.append('g')
         .attr('class', 'axis axis--x')
         .attr('transform', `translate(0, ${bounds.y})`)
@@ -14,17 +14,18 @@ export class XAxisPatch {
 
     let xScale = utils.getScale(
       cfg.scaleType.x,
-      data.map(d => d.x),
+      dataSeries,
       [bounds.x, bounds.width + bounds.x]
     )
 
-    let xAxis = d3.axisBottom(xScale).ticks(5)
+    console.log(utils.getTicks(cfg.tickType.x, dataSeries))
+    let xAxis = d3.axisBottom(xScale).tickValues(utils.getTicks(cfg.tickType.x, dataSeries))
     xAxisDiv.transition().duration(200).call(xAxis)
   }
 }
 
 export class YAxisPatch {
-  constructor (svg, bounds, data, cfg) {
+  constructor (svg, bounds, dataSeries, cfg) {
     let yAxisDiv = svg.append('g')
         .attr('class', 'axis axis--y')
         .attr('transform', `translate(${bounds.x}, 0)`)
@@ -35,11 +36,11 @@ export class YAxisPatch {
 
     let yScale = utils.getScale(
       cfg.scaleType.y,
-      data.map(d => d.y),
+      dataSeries,
       [bounds.y + bounds.height, bounds.y]
     )
 
-    let yAxis = d3.axisLeft(yScale).ticks(5)
+    let yAxis = d3.axisLeft(yScale).tickValues(utils.getTicks(cfg.tickType.y, dataSeries))
     yAxisDiv.transition().duration(200).call(yAxis)
   }
 }

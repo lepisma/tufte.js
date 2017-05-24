@@ -16,9 +16,9 @@ export default class LinePlot {
         .attr('height', cfg.height)
 
     // Plot axes
-    new XAxisPatch(svg, cfg.xAxisBounds, data, cfg) // eslint-disable-line no-new
+    new XAxisPatch(svg, cfg.xAxisBounds, data.map(d => d.x), cfg) // eslint-disable-line no-new
     if (!cfg.dotLinePlot) {
-      new YAxisPatch(svg, cfg.yAxisBounds, data, cfg) // eslint-disable-line no-new
+      new YAxisPatch(svg, cfg.yAxisBounds, data.map(d => d.y), cfg) // eslint-disable-line no-new
     }
 
     // Plot line
