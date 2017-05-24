@@ -5,13 +5,13 @@ import Tooltip from '../../tooltip'
 export default class ScatterPatch {
   constructor (svg, bounds, data, cfg) {
     let xScale = utils.getScale(
-      cfg.scaleType.x,
       data.map(d => d.x),
+      cfg.scaleType.x,
       [0, bounds.width]
     )
     let yScale = utils.getScale(
-      cfg.scaleType.y,
       data.map(d => d.y),
+      cfg.scaleType.y,
       [bounds.height, 0]
     )
 

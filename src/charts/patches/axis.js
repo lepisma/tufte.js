@@ -13,8 +13,8 @@ export class XAxisPatch {
     }
 
     let xScale = utils.getScale(
-      cfg.scaleType.x,
       dataSeries,
+      cfg.scaleType.x,
       [bounds.x, bounds.width + bounds.x]
     )
 
@@ -23,7 +23,7 @@ export class XAxisPatch {
     if (cfg.scaleType.x === 'time') {
       xAxis.ticks(5)
     } else {
-      xAxis.tickValues(utils.getTicks(cfg.tickType.x, dataSeries))
+      xAxis.tickValues(utils.getTicks(dataSeries, cfg.tickType.x, cfg.scaleType.x))
     }
 
     xAxisDiv.transition().duration(200).call(xAxis)
@@ -41,8 +41,8 @@ export class YAxisPatch {
     }
 
     let yScale = utils.getScale(
-      cfg.scaleType.y,
       dataSeries,
+      cfg.scaleType.y,
       [bounds.y + bounds.height, bounds.y]
     )
 
@@ -51,7 +51,7 @@ export class YAxisPatch {
     if (cfg.scaleType.y === 'time') {
       yAxis.ticks(5)
     } else {
-      yAxis.tickValues(utils.getTicks(cfg.tickType.y, dataSeries))
+      yAxis.tickValues(utils.getTicks(dataSeries, cfg.tickType.y, cfg.scaleType.y))
     }
 
     yAxisDiv.transition().duration(200).call(yAxis)

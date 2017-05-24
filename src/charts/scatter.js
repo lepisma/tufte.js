@@ -18,9 +18,25 @@ export default class ScatterPlot {
 
     // Setup layout
     if (cfg.marginal) {
-      let [xMarginalizedData, yMarginalizedData] = utils.marginalize(data)
-      new LinePatch(svg, cfg.xMarginalBounds, xMarginalizedData, cfg.overwrite({ smoothing: true })) // eslint-disable-line no-new
-      new LinePatch(svg, cfg.yMarginalBounds, yMarginalizedData, cfg.overwrite({ smoothing: true })) // eslint-disable-line no-new
+      let [xMarginalizedData, yMarginalizedData] = utils.marginalize(data, cfg.scaleType)
+      new LinePatch( // eslint-disable-line no-new
+        svg,
+        cfg.xMarginalBounds,
+        xMarginalizedData,
+        cfg.overwrite({
+          smoothing: true,
+          scaleType: { y: 'linear', x: 'linear' }
+        })
+      )
+      new LinePatch( // eslint-disable-line no-new
+        svg,
+        cfg.yMarginalBounds,
+        yMarginalizedData,
+        cfg.overwrite({
+          smoothing: true,
+          scaleType: { x: 'linear', y: 'linear' }
+        })
+      )
     }
 
     // Plot axes
