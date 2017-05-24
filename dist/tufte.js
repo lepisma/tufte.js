@@ -163,8 +163,14 @@ function getTicks(type, dataSeries) {
     }
 
     return d3Ticks;
+  } else if (type === 'quartile') {
+    return [0, 0.25, 0.5, 0.75, 1].map(function (q) {
+      return d3.quantile(dataSeries.concat().sort(function (x, y) {
+        return x - y;
+      }), q);
+    });
   } else {
-    return 5;
+    return d3.ticks(Math.min.apply(Math, _toConsumableArray(dataSeries)), Math.max.apply(Math, _toConsumableArray(dataSeries)), 5);
   }
 }
 
@@ -209,7 +215,6 @@ var XAxisPatch = exports.XAxisPatch = function XAxisPatch(svg, bounds, dataSerie
 
   var xScale = utils.getScale(cfg.scaleType.x, dataSeries, [bounds.x, bounds.width + bounds.x]);
 
-  console.log(utils.getTicks(cfg.tickType.x, dataSeries));
   var xAxis = d3.axisBottom(xScale).tickValues(utils.getTicks(cfg.tickType.x, dataSeries));
   xAxisDiv.transition().duration(200).call(xAxis);
 };

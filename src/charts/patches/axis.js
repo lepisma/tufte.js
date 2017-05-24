@@ -18,7 +18,6 @@ export class XAxisPatch {
       [bounds.x, bounds.width + bounds.x]
     )
 
-    console.log(utils.getTicks(cfg.tickType.x, dataSeries))
     let xAxis = d3.axisBottom(xScale).tickValues(utils.getTicks(cfg.tickType.x, dataSeries))
     xAxisDiv.transition().duration(200).call(xAxis)
   }

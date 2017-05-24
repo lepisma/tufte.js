@@ -120,7 +120,7 @@
        // Scatter plot with marginal
        new tufte.ScatterPlot('#scatter-plot-with-marginal', [...Array(200).keys()].map(d => {
          return {x: pgen.next().value, y: pgen2.next().value}
-       }), { marginal: true })
+       }), { marginal: true, tickType: { x: 'quartile', y: 'quartile' } })
     </script>
   </body>
 </html>

@@ -56,7 +56,9 @@ export function getTicks (type, dataSeries) {
     }
 
     return d3Ticks
+  } else if (type === 'quartile') {
+    return [0, 0.25, 0.5, 0.75, 1].map(q => d3.quantile(dataSeries.concat().sort((x, y) => x - y), q))
   } else {
-    return 5
+    return d3.ticks(Math.min(...dataSeries), Math.max(...dataSeries), 5)
   }
 }
