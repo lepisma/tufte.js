@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import * as utils from './utils'
 import parseConfig from '../config'
-import ScatterPatch from './patches/scatter'
+import { ScatterPatch, ScatterPatchCanvas } from './patches/scatter'
 import LinePatch from './patches/line'
 import { XAxisPatch, YAxisPatch } from './patches/axis'
 
@@ -43,6 +43,10 @@ export default class ScatterPlot {
     new XAxisPatch(svg, cfg.xAxisBounds, data.map(d => d.x), cfg) // eslint-disable-line no-new
     new YAxisPatch(svg, cfg.yAxisBounds, data.map(d => d.y), cfg) // eslint-disable-line no-new
 
-    new ScatterPatch(svg, cfg.drawingBounds, data, cfg.overwrite({ tooltip: true }))  // eslint-disable-line no-new
+    if (data.length > 2000) {
+      new ScatterPatchCanvas(svg, cfg.drawingBounds, data, cfg.overwrite({ tooltip: true })) // eslint-disable-line no-new
+    } else {
+      new ScatterPatch(svg, cfg.drawingBounds, data, cfg.overwrite({ tooltip: true })) // eslint-disable-line no-new
+    }
   }
 }

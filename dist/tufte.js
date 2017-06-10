@@ -107,12 +107,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /**
  * Return marginalized histogram data across x and y
  */
-function marginalize(data) {
+function marginalize(data, scaleType) {
   var x = data.map(function (d) {
     return d.x;
   });
+  if (scaleType.x === 'log') x = x.map(function (d) {
+    return Math.log(d);
+  });
   var y = data.map(function (d) {
     return d.y;
+  });
+  if (scaleType.y === 'log') y = y.map(function (d) {
+    return Math.log(d);
   });
 
   var countsX = d3.histogram().thresholds(d3.thresholdSturges(x))(x).map(function (bin) {
@@ -138,19 +144,19 @@ function marginalize(data) {
 /**
  * Get scale depending on the type and range, using the single data series
  */
-function getScale(type, dataSeries, range) {
+function getScale(dataSeries, scaleType, range) {
   return {
     'linear': d3.scaleLinear,
     'log': d3.scaleLog,
     'time': d3.scaleTime
-  }[type]().domain(d3.extent(dataSeries)).range(range);
+  }[scaleType]().domain(d3.extent(dataSeries)).range(range);
 }
 
 /**
  * Get ticks depending on the type
  */
-function getTicks(type, dataSeries) {
-  if (type === 'plain') {
+function getTicks(dataSeries, tickType, scaleType) {
+  if (tickType === 'plain') {
     var min = Math.min.apply(Math, _toConsumableArray(dataSeries));
     var max = Math.max.apply(Math, _toConsumableArray(dataSeries));
     var d3Ticks = d3.ticks(min, max, 5);
@@ -164,7 +170,7 @@ function getTicks(type, dataSeries) {
     }
 
     return d3Ticks;
-  } else if (type === 'quartile') {
+  } else if (tickType === 'quartile') {
     return [0, 0.25, 0.5, 0.75, 1].map(function (q) {
       return d3.quantile(dataSeries.concat().sort(function (x, y) {
         return x - y;
@@ -214,14 +220,14 @@ var XAxisPatch = exports.XAxisPatch = function XAxisPatch(svg, bounds, dataSerie
     new _annotation2.default(svg, { x: bounds.x + bounds.width, y: bounds.y + 40 }, cfg.label.x); // eslint-disable-line no-new
   }
 
-  var xScale = utils.getScale(cfg.scaleType.x, dataSeries, [bounds.x, bounds.width + bounds.x]);
+  var xScale = utils.getScale(dataSeries, cfg.scaleType.x, [bounds.x, bounds.width + bounds.x]);
 
   var xAxis = d3.axisBottom(xScale);
 
   if (cfg.scaleType.x === 'time') {
     xAxis.ticks(5);
   } else {
-    xAxis.tickValues(utils.getTicks(cfg.tickType.x, dataSeries));
+    xAxis.tickValues(utils.getTicks(dataSeries, cfg.tickType.x, cfg.scaleType.x));
   }
 
   xAxisDiv.transition().duration(200).call(xAxis);
@@ -236,14 +242,14 @@ var YAxisPatch = exports.YAxisPatch = function YAxisPatch(svg, bounds, dataSerie
     new _annotation2.default(svg, { x: 10, y: bounds.y }, cfg.label.y, { horizontal: false }); // eslint-disable-line no-new
   }
 
-  var yScale = utils.getScale(cfg.scaleType.y, dataSeries, [bounds.y + bounds.height, bounds.y]);
+  var yScale = utils.getScale(dataSeries, cfg.scaleType.y, [bounds.y + bounds.height, bounds.y]);
 
   var yAxis = d3.axisLeft(yScale);
 
   if (cfg.scaleType.y === 'time') {
     yAxis.ticks(5);
   } else {
-    yAxis.tickValues(utils.getTicks(cfg.tickType.y, dataSeries));
+    yAxis.tickValues(utils.getTicks(dataSeries, cfg.tickType.y, cfg.scaleType.y));
   }
 
   yAxisDiv.transition().duration(200).call(yAxis);
@@ -275,12 +281,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var LinePatch = function LinePatch(svg, bounds, data, cfg) {
   _classCallCheck(this, LinePatch);
 
-  var xScale = utils.getScale(cfg.scaleType.x, data.map(function (d) {
+  var xScale = utils.getScale(data.map(function (d) {
     return d.x;
-  }), [0, bounds.width]);
-  var yScale = utils.getScale(cfg.scaleType.y, data.map(function (d) {
+  }), cfg.scaleType.x, [0, bounds.width]);
+  var yScale = utils.getScale(data.map(function (d) {
     return d.y;
-  }), [bounds.height, 0]);
+  }), cfg.scaleType.y, [bounds.height, 0]);
 
   var line = d3.line().x(function (d) {
     return xScale(d.x) + bounds.x;
@@ -307,6 +313,9 @@ exports.default = LinePatch;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.ScatterPatchCanvas = exports.ScatterPatch = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
@@ -328,15 +337,15 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ScatterPatch = function ScatterPatch(svg, bounds, data, cfg) {
+var ScatterPatch = exports.ScatterPatch = function ScatterPatch(svg, bounds, data, cfg) {
   _classCallCheck(this, ScatterPatch);
 
-  var xScale = utils.getScale(cfg.scaleType.x, data.map(function (d) {
+  var xScale = utils.getScale(data.map(function (d) {
     return d.x;
-  }), [0, bounds.width]);
-  var yScale = utils.getScale(cfg.scaleType.y, data.map(function (d) {
+  }), cfg.scaleType.x, [0, bounds.width]);
+  var yScale = utils.getScale(data.map(function (d) {
     return d.y;
-  }), [bounds.height, 0]);
+  }), cfg.scaleType.y, [bounds.height, 0]);
 
   var patchGroup = svg.append('g');
 
@@ -372,7 +381,55 @@ var ScatterPatch = function ScatterPatch(svg, bounds, data, cfg) {
   }
 };
 
-exports.default = ScatterPatch;
+var ScatterPatchCanvas = exports.ScatterPatchCanvas = function () {
+  function ScatterPatchCanvas(svg, bounds, data, cfg) {
+    _classCallCheck(this, ScatterPatchCanvas);
+
+    this.xScale = utils.getScale(data.map(function (d) {
+      return d.x;
+    }), cfg.scaleType.x, [0, bounds.width]);
+    this.yScale = utils.getScale(data.map(function (d) {
+      return d.y;
+    }), cfg.scaleType.y, [bounds.height, 0]);
+
+    var parent = d3.select(svg.node().parentNode);
+    // HACK: Might affect experience
+    parent.style('position', 'relative');
+
+    // Extra space on the sides to make up for edge cases
+    this.spacing = {
+      left: 5,
+      right: 5,
+      top: 5,
+      bottom: 5
+    };
+
+    this.canvas = parent.append('canvas').attr('width', bounds.width + this.spacing.left + this.spacing.right).attr('height', bounds.height + this.spacing.top + this.spacing.bottom).style('position', 'absolute').style('left', bounds.x - this.spacing.left + 'px').style('top', bounds.y - this.spacing.top + 'px');
+
+    this.drawCircles(data, parseInt(cfg.r));
+  }
+
+  _createClass(ScatterPatchCanvas, [{
+    key: 'drawCircles',
+    value: function drawCircles(data, radius) {
+      var _this = this;
+
+      var context = this.canvas.node().getContext('2d');
+
+      context.beginPath();
+      data.forEach(function (d) {
+        var point = [_this.xScale(d.x) + _this.spacing.left, _this.yScale(d.y) + _this.spacing.top];
+        context.moveTo(point[0], point[1]);
+        context.arc(point[0], point[1], radius, 0, 2 * Math.PI);
+      });
+
+      context.fillStyle = '#000';
+      context.fill();
+    }
+  }]);
+
+  return ScatterPatchCanvas;
+}();
 
 /***/ }),
 /* 5 */
@@ -615,8 +672,6 @@ var _config2 = _interopRequireDefault(_config);
 
 var _scatter = __webpack_require__(4);
 
-var _scatter2 = _interopRequireDefault(_scatter);
-
 var _line = __webpack_require__(3);
 
 var _line2 = _interopRequireDefault(_line);
@@ -640,13 +695,21 @@ var ScatterPlot = function ScatterPlot(target, data, config) {
 
   // Setup layout
   if (cfg.marginal) {
-    var _utils$marginalize = utils.marginalize(data),
+    var _utils$marginalize = utils.marginalize(data, cfg.scaleType),
         _utils$marginalize2 = _slicedToArray(_utils$marginalize, 2),
         xMarginalizedData = _utils$marginalize2[0],
         yMarginalizedData = _utils$marginalize2[1];
 
-    new _line2.default(svg, cfg.xMarginalBounds, xMarginalizedData, cfg.overwrite({ smoothing: true })); // eslint-disable-line no-new
-    new _line2.default(svg, cfg.yMarginalBounds, yMarginalizedData, cfg.overwrite({ smoothing: true })); // eslint-disable-line no-new
+    new _line2.default( // eslint-disable-line no-new
+    svg, cfg.xMarginalBounds, xMarginalizedData, cfg.overwrite({
+      smoothing: true,
+      scaleType: { y: 'linear', x: 'linear' }
+    }));
+    new _line2.default( // eslint-disable-line no-new
+    svg, cfg.yMarginalBounds, yMarginalizedData, cfg.overwrite({
+      smoothing: true,
+      scaleType: { x: 'linear', y: 'linear' }
+    }));
   }
 
   // Plot axes
@@ -657,7 +720,11 @@ var ScatterPlot = function ScatterPlot(target, data, config) {
     return d.y;
   }), cfg); // eslint-disable-line no-new
 
-  new _scatter2.default(svg, cfg.drawingBounds, data, cfg.overwrite({ tooltip: true })); // eslint-disable-line no-new
+  if (data.length > 2000) {
+    new _scatter.ScatterPatchCanvas(svg, cfg.drawingBounds, data, cfg.overwrite({ tooltip: true })); // eslint-disable-line no-new
+  } else {
+    new _scatter.ScatterPatch(svg, cfg.drawingBounds, data, cfg.overwrite({ tooltip: true })); // eslint-disable-line no-new
+  }
 };
 
 exports.default = ScatterPlot;
