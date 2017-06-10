@@ -605,8 +605,6 @@ var _line2 = _interopRequireDefault(_line);
 
 var _scatter = __webpack_require__(4);
 
-var _scatter2 = _interopRequireDefault(_scatter);
-
 var _axis = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -639,7 +637,7 @@ var LinePlot = function LinePlot(target, data, config) {
 
   // Scatter points with tooltip only if data is less
   if (cfg.dotLinePlot) {
-    new _scatter2.default(svg, cfg.drawingBounds, data, cfg.overwrite({ tooltip: true, r: '6px' })); // eslint-disable-line no-new
+    new _scatter.ScatterPatch(svg, cfg.drawingBounds, data, cfg.overwrite({ tooltip: true, r: '6px' })); // eslint-disable-line no-new
   }
 };
 
