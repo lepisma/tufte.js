@@ -156,9 +156,14 @@ function getScale(dataSeries, scaleType, range) {
  * Get ticks depending on the type
  */
 function getTicks(dataSeries, tickType, scaleType) {
+  var scale = getScale(dataSeries, scaleType, [0, 1]);
+  var scaled = dataSeries.map(function (d) {
+    return scale(d);
+  });
+
   if (tickType === 'plain') {
-    var min = Math.min.apply(Math, _toConsumableArray(dataSeries));
-    var max = Math.max.apply(Math, _toConsumableArray(dataSeries));
+    var min = Math.min.apply(Math, _toConsumableArray(scaled));
+    var max = Math.max.apply(Math, _toConsumableArray(scaled));
     var d3Ticks = d3.ticks(min, max, 5);
 
     if (d3Ticks.indexOf(min) === -1) {
@@ -169,12 +174,20 @@ function getTicks(dataSeries, tickType, scaleType) {
       d3Ticks.splice(d3Ticks.length - 1, 1, max);
     }
 
-    return d3Ticks;
+    return d3Ticks.map(function (d) {
+      return scale.invert(d);
+    });
   } else if (tickType === 'quartile') {
-    return [0, 0.25, 0.5, 0.75, 1].map(function (q) {
-      return d3.quantile(dataSeries.concat().sort(function (x, y) {
+    var ticks = [0, 0.25, 0.5, 0.75, 1].map(function (q) {
+      return d3.quantile(scaled.concat().sort(function (x, y) {
         return x - y;
       }), q);
+    });
+    console.log(ticks.map(function (d) {
+      return scale.invert(d);
+    }));
+    return ticks.map(function (d) {
+      return scale.invert(d);
     });
   } else {
     return d3.ticks(Math.min.apply(Math, _toConsumableArray(dataSeries)), Math.max.apply(Math, _toConsumableArray(dataSeries)), 5);

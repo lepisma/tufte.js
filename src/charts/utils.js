@@ -45,9 +45,12 @@ export function getScale (dataSeries, scaleType, range) {
  * Get ticks depending on the type
  */
 export function getTicks (dataSeries, tickType, scaleType) {
+  let scale = getScale(dataSeries, scaleType, [0, 1])
+  let scaled = dataSeries.map(d => scale(d))
+
   if (tickType === 'plain') {
-    let min = Math.min(...dataSeries)
-    let max = Math.max(...dataSeries)
+    let min = Math.min(...scaled)
+    let max = Math.max(...scaled)
     let d3Ticks = d3.ticks(min, max, 5)
 
     if (d3Ticks.indexOf(min) === -1) {
@@ -58,9 +61,11 @@ export function getTicks (dataSeries, tickType, scaleType) {
       d3Ticks.splice(d3Ticks.length - 1, 1, max)
     }
 
-    return d3Ticks
+    return d3Ticks.map(d => scale.invert(d))
   } else if (tickType === 'quartile') {
-    return [0, 0.25, 0.5, 0.75, 1].map(q => d3.quantile(dataSeries.concat().sort((x, y) => x - y), q))
+    let ticks = [0, 0.25, 0.5, 0.75, 1].map(q => d3.quantile(scaled.concat().sort((x, y) => x - y), q))
+    console.log(ticks.map(d => scale.invert(d)))
+    return ticks.map(d => scale.invert(d))
   } else {
     return d3.ticks(Math.min(...dataSeries), Math.max(...dataSeries), 5)
   }
