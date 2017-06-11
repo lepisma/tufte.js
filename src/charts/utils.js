@@ -64,7 +64,6 @@ export function getTicks (dataSeries, tickType, scaleType) {
     return d3Ticks.map(d => scale.invert(d))
   } else if (tickType === 'quartile') {
     let ticks = [0, 0.25, 0.5, 0.75, 1].map(q => d3.quantile(scaled.concat().sort((x, y) => x - y), q))
-    console.log(ticks.map(d => scale.invert(d)))
     return ticks.map(d => scale.invert(d))
   } else {
     return d3.ticks(Math.min(...dataSeries), Math.max(...dataSeries), 5)
