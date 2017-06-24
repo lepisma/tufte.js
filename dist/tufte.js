@@ -183,9 +183,6 @@ function getTicks(dataSeries, tickType, scaleType) {
         return x - y;
       }), q);
     });
-    console.log(ticks.map(function (d) {
-      return scale.invert(d);
-    }));
     return ticks.map(function (d) {
       return scale.invert(d);
     });
