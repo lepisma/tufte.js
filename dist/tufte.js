@@ -536,7 +536,7 @@ function parseConfig(target, data, config) {
     return root.label.x ? 50 : 30;
   });
   cconfig.band.derive('y', function (node, root) {
-    return root.dotLinePlot ? 0 : root.label.y ? 50 : 30;
+    return root.dotLinePlot ? 0 : root.label.y ? 60 : 30;
   });
 
   // Bounds for drawing stuff

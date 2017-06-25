@@ -64,7 +64,7 @@ export default function parseConfig (target, data, config) {
 
   // Axis bands
   cconfig.band.derive('x', (node, root) => root.label.x ? 50 : 30)
-  cconfig.band.derive('y', (node, root) => root.dotLinePlot ? 0 : (root.label.y ? 50 : 30))
+  cconfig.band.derive('y', (node, root) => root.dotLinePlot ? 0 : (root.label.y ? 60 : 30))
 
   // Bounds for drawing stuff
   cconfig.derive('drawingBounds', node => {
