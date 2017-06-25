@@ -9,8 +9,10 @@ export function marginalize (data, scaleType) {
   let y = data.map(d => d.y)
   if (scaleType.y === 'log') y = y.map(d => Math.log(d))
 
-  let countsX = d3.histogram().thresholds(d3.thresholdSturges(x))(x).map(bin => bin.length)
-  let countsY = d3.histogram().thresholds(d3.thresholdSturges(y))(y).map(bin => bin.length)
+  let xThresh = d3.thresholdFreedmanDiaconis(x, d3.min(x), d3.max(x))
+  let yThresh = d3.thresholdFreedmanDiaconis(x, d3.min(x), d3.max(x))
+  let countsX = d3.histogram().thresholds(xThresh)(x).map(bin => bin.length)
+  let countsY = d3.histogram().thresholds(yThresh)(y).map(bin => bin.length)
 
   return [
     countsX.map((c, idx) => {

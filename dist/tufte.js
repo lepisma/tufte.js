@@ -121,10 +121,12 @@ function marginalize(data, scaleType) {
     return Math.log(d);
   });
 
-  var countsX = d3.histogram().thresholds(d3.thresholdSturges(x))(x).map(function (bin) {
+  var xThresh = d3.thresholdFreedmanDiaconis(x, d3.min(x), d3.max(x));
+  var yThresh = d3.thresholdFreedmanDiaconis(x, d3.min(x), d3.max(x));
+  var countsX = d3.histogram().thresholds(xThresh)(x).map(function (bin) {
     return bin.length;
   });
-  var countsY = d3.histogram().thresholds(d3.thresholdSturges(y))(y).map(function (bin) {
+  var countsY = d3.histogram().thresholds(yThresh)(y).map(function (bin) {
     return bin.length;
   });
 
