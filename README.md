@@ -21,4 +21,4 @@ data*, like a table.
 > This project is not associated with Edward Tufte and is purely an opinionated
 > take on his visual style.
 
-Check out the [documentation](https://lepisma.github.io/tufte.js/).
+Check out the [documentation](https://lepisma.xyz/tufte.js/).
