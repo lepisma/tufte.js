@@ -23,7 +23,7 @@
     "babel-loader": "^7.0.0",
     "babel-preset-latest": "^6.24.1",
     "css-loader": "^0.28.1",
-    "node-sass": "^4.5.3",
+    "node-sass": "^7.0.0",
     "sass-loader": "^6.0.5",
     "standard": "^10.0.2",
     "style-loader": "^0.17.0",
